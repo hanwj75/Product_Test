@@ -123,11 +123,38 @@ body {
   display: none;
 }
 
+.result-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.champ-result-img {
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  border: 4px solid var(--accent);
+  object-fit: cover;
+  box-shadow: 0 0 20px rgba(194, 144, 45, 0.4);
+}
+
 .result-title {
-  font-size: 1.6rem;
+  font-size: 1.8rem;
   font-weight: 800;
   color: var(--accent);
-  margin-bottom: 12px;
+  margin: 0;
+}
+
+.similarity-badge {
+  background: var(--accent);
+  color: white;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 1.1rem;
+  font-weight: 800;
+  margin-top: 8px;
 }
 
 .result-bar-container {

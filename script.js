@@ -26,6 +26,8 @@ const maleBar = document.getElementById('maleBar')
 const femaleBar = document.getElementById('femaleBar')
 const malePercent = document.getElementById('malePercent')
 const femalePercent = document.getElementById('femalePercent')
+const similarityPercent = document.getElementById('similarityPercent')
+const champImg = document.getElementById('champImg')
 const retryBtn = document.getElementById('retryBtn')
 
 const startWebcamBtn = document.getElementById('startWebcamBtn')
@@ -33,6 +35,20 @@ const uploadTabBtn = document.getElementById('uploadTabBtn')
 const webcamContainer = document.getElementById('webcam-container')
 
 let model, webcam, maxPredictions, isWebcamActive = false
+
+// 챔피언 데이터 매칭 (성별 상 대표 챔피언)
+const champData = {
+  male: [
+    { name: '가렌', img: 'https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Garen_0.jpg', msg: '당신은 가렌처럼 정의롭고 강인한 포스를 가진 "남챔 상"입니다!' },
+    { name: '다리우스', img: 'https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Darius_0.jpg', msg: '당신은 다리우스처럼 압도적인 위엄과 카리스마를 가진 "남챔 상"입니다!' },
+    { name: '야스오', img: 'https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Yasuo_0.jpg', msg: '당신은 야스오처럼 날렵하고 고독한 검사의 분위기를 가진 "남챔 상"입니다!' }
+  ],
+  female: [
+    { name: '아리', img: 'https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Ahri_0.jpg', msg: '당신은 아리처럼 화려하고 매혹적인 분위기를 가진 "여챔 상"입니다!' },
+    { name: '럭스', img: 'https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Lux_0.jpg', msg: '당신은 럭스처럼 밝고 긍정적인 에너지가 넘치는 "여챔 상"입니다!' },
+    { name: '카이사', img: 'https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Kaisa_0.jpg', msg: '당신은 카이사처럼 신비롭고 강렬한 눈빛을 가진 "여챔 상"입니다!' }
+  ]
+}
 
 // Theme Management
 let isLightMode = localStorage.getItem(THEME_KEY) === 'light'
@@ -99,7 +115,6 @@ async function initModel() {
     const metadataURL = MODEL_URL + 'metadata.json'
     model = await tmImage.load(modelURL, metadataURL)
     maxPredictions = model.getTotalClasses()
-    console.log('Model loaded')
   } catch (e) {
     console.error('Failed to load model', e)
     alert('AI 모델을 불러오는데 실패했습니다.')
@@ -110,13 +125,11 @@ async function initModel() {
 // Webcam Logic
 async function startWebcam() {
   if (!model) await initModel()
-  
   if (isWebcamActive) return
   
   loadingSpinner.style.display = 'block'
   uploadArea.style.display = 'none'
   webcamContainer.style.display = 'block'
-  resultContainer.style.display = 'block'
   
   try {
     const flip = true
@@ -130,9 +143,10 @@ async function startWebcam() {
     webcamContainer.appendChild(webcam.canvas)
     startWebcamBtn.classList.add('primary')
     uploadTabBtn.classList.remove('primary')
+    resultContainer.style.display = 'block'
   } catch (e) {
     console.error(e)
-    alert('웹캠을 시작할 수 없습니다. 권한을 확인해주세요.')
+    alert('웹캠을 시작할 수 없습니다.')
     showUploadTab()
   }
   loadingSpinner.style.display = 'none'
@@ -160,7 +174,6 @@ function showUploadTab() {
   webcamContainer.style.display = 'none'
   uploadTabBtn.classList.add('primary')
   startWebcamBtn.classList.remove('primary')
-  retryBtn.click()
 }
 
 startWebcamBtn.addEventListener('click', startWebcam)
@@ -220,24 +233,31 @@ async function predict(inputElement) {
   maleBar.style.width = mValue + '%'
   femaleBar.style.width = fValue + '%'
 
+  // 결과 매칭 로직
   if (mValue > fValue) {
-    resultLabel.textContent = '강인한 "남자 챔피언" 상!'
-    resultMessage.textContent = '가렌, 다리우스처럼 강인한 남챔 상입니다.'
+    const randomChamp = champData.male[Math.floor(Math.random() * champData.male.length)]
+    similarityPercent.textContent = mValue
+    resultLabel.textContent = `당신은 "${randomChamp.name}" 상!`
+    resultMessage.textContent = randomChamp.msg
+    champImg.src = randomChamp.img
   } else {
-    resultLabel.textContent = '아름다운 "여자 챔피언" 상!'
-    resultMessage.textContent = '아리, 럭스처럼 매력적인 여챔 상입니다.'
+    const randomChamp = champData.female[Math.floor(Math.random() * champData.female.length)]
+    similarityPercent.textContent = fValue
+    resultLabel.textContent = `당신은 "${randomChamp.name}" 상!`
+    resultMessage.textContent = randomChamp.msg
+    champImg.src = randomChamp.img
   }
 }
 
 retryBtn.addEventListener('click', () => {
-  if (isWebcamActive) {
-    // 웹캠 모드일 때는 초기화가 큰 의미 없으므로 무시하거나 웹캠을 끔
-    return
-  }
+  stopWebcam()
   previewImg.style.display = 'none'
   uploadPrompt.style.display = 'flex'
   resultContainer.style.display = 'none'
+  uploadArea.style.display = 'flex'
   imageUpload.value = ''
+  uploadTabBtn.classList.remove('primary')
+  startWebcamBtn.classList.remove('primary')
 })
 
 // Champion Picker Logic
