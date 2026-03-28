@@ -119,7 +119,7 @@ body {
   padding: 30px;
   border-radius: 30px;
   background: var(--card);
-  border: 2px solid var(--line);
+  border: 1px solid var(--line);
   display: none;
 }
 
@@ -240,6 +240,9 @@ body {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .lane-card:hover {
@@ -248,12 +251,19 @@ body {
   box-shadow: 0 10px 20px rgba(194, 144, 45, 0.15);
 }
 
-.lane-icon {
-  font-size: 1.5rem;
-  font-weight: 800;
-  color: var(--accent);
+.lane-champ-img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: 2px solid var(--accent);
   margin-bottom: 12px;
-  display: block;
+  object-fit: cover;
+  background: var(--bg1);
+  transition: transform 0.3s ease;
+}
+
+.lane-card:hover .lane-champ-img {
+  transform: scale(1.1);
 }
 
 .lane-name {
@@ -261,14 +271,15 @@ body {
   color: var(--muted);
   text-transform: uppercase;
   letter-spacing: 1px;
-  margin-bottom: 15px;
+  margin-bottom: 10px;
   display: block;
+  font-weight: 800;
 }
 
 .champ-name {
-  font-size: 1.4rem;
+  font-size: 1.3rem;
   font-weight: 800;
-  min-height: 1.4rem;
+  min-height: 1.3rem;
   color: var(--text);
   transition: transform 0.3s ease;
 }

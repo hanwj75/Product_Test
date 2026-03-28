@@ -33,6 +33,11 @@ const webcamContainer = document.getElementById('webcam-container')
 
 let model, webcam, maxPredictions, isWebcamActive = false
 
+// 모든 챔피언 한국어 이름 -> 영문 ID 매핑 (Data Dragon 기준)
+const champMapping = {
+  '가렌': 'Garen', '갈리오': 'Galio', '갱플랭크': 'Gangplank', '그라가스': 'Gragas', '그레이브즈': 'Graves', '나르': 'Gnar', '나미': 'Nami', '나서스': 'Nasus', '노틸러스': 'Nautilus', '녹턴': 'Nocturne', '누누와 윌럼프': 'Nunu', '니달리': 'Nidalee', '니코': 'Neeko', '닐라': 'Nilah', '다리우스': 'Darius', '다이애나': 'Diana', '드레이븐': 'Draven', '라이즈': 'Ryze', '라칸': 'Rakan', '람머스': 'Ramus', '럭스': 'Lux', '럼블': 'Rumble', '레넥톤': 'Renekton', '레오나': 'Leona', '렐': 'Rell', '렝가': 'Rengar', '루시안': 'Lucian', '룰루': 'Lulu', '르블랑': 'Leblanc', '리 신': 'LeeSin', '리븐': 'Riven', '리산드라': 'Lissandra', '릴리아': 'Lillia', '마스터 이': 'MasterYi', '마오카이': 'Maokai', '말자하': 'Malzahar', '말파이트': 'Malphite', '모데카이저': 'Mordekaiser', '모르가나': 'Morgana', '문도 박사': 'DrMundo', '미스 포츈': 'MissFortune', '바드': 'Bard', '바루스': 'Varus', '바이': 'Vi', '베이가': 'Veigar', '베인': 'Vayne', '벨베스': 'Belveth', '벨코즈': 'Velkoz', '볼리베어': 'Volibear', '브라움': 'Braum', '브랜드': 'Brand', '블라디미르': 'Vladimir', '블리츠크랭크': 'Blitzcrank', '비에고': 'Viego', '빅토르': 'Viktor', '뽀삐': 'Poppy', '사미라': 'Samira', '사이온': 'Sion', '사일러스': 'Sylas', '샤코': 'Shaco', '세나': 'Senna', '세라핀': 'Seraphine', '세주아니', 'Sejuani', '세트': 'Sett', '소나': 'Sona', '소라카': 'Soraka', '쉔': 'Shen', '쉬바나': 'Shyvana', '스웨인': 'Swain', '스카너': 'Skarner', '시비르': 'Sivir', '신 짜오': 'XinZhao', '신드라': 'Syndra', '신지드': 'Singed', '쓰레쉬': 'Thresh', '아리': 'Ahri', '아무무': 'Amumu', '아우렐리온 솔': 'AurelionSol', '아이번': 'Ivern', '아지르': 'Azir', '아칼리': 'Akali', '아크샨': 'Akshan', '아트록스': 'Aatrox', '알리스타': 'Alistar', '애니': 'Annie', '애니비아': 'Anivia', '애쉬': 'Ashe', '야스오': 'Yasuo', '에코': 'Ekko', '엘리스': 'Elise', '오공': 'MonkeyKing', '오리아나': 'Orianna', '오른': 'Ornn', '올라프': 'Olaf', '요네': 'Yone', '요릭': 'Yorick', '우디르': 'Udyr', '우르곳': 'Urgot', '워윅': 'Warwick', '유미': 'Yuumi', '이렐리아': 'Irelia', '이벨린': 'Evelynn', '이즈리얼': 'Ezreal', '일라오이': 'Illaoi', '자르반 4세': 'JarvanIV', '자이라이': 'Zyra', '자크': 'Zac', '자야': 'Xayah', '잔나': 'Janna', '잭스': 'Jax', '제드': 'Zed', '제라스': 'Xerath', '제리': 'Zeri', '제이스': 'Jayce', '조이': 'Zoe', '직스': 'Ziggs', '진': 'Jhin', '징크스': 'Jinx', '질리언': 'Zilean', '초가스': 'Chogath', '카르마': 'Karma', '카미유': 'Camille', '카사딘': 'Kassadin', '카서스': 'Karthus', '카시오페아': 'Cassiopeia', '카이사': 'Kaisa', '카직스': 'Khazix', '카타리나': 'Katarina', '칼리스타': 'Kalista', '케넨': 'Kennen', '케이틀린': 'Caitlyn', '케인': 'Kayn', '케일': 'Kayle', '코그모': 'KogMaw', '코르키': 'Corki', '퀸': 'Quinn', '클레드': 'Kled', '킨드레드': 'Kindred', '타릭': 'Taric', '탈론': 'Talon', '탈리야': 'Tallyah', '트런들': 'Trundle', '트리스타나': 'Tristana', '트린다미어': 'Tryndamere', '트위스티드 페이트': 'TwistedFate', '트위치': 'Twitch', '판테온': 'Pantheon', '피들스틱': 'Fiddlesticks', '피오라': 'Fiora', '피즈': 'Fizz', '하이머딩거': 'Heimerdinger', '헤카림': 'Hecarim'
+}
+
 // 챔피언 데이터 매칭 (LoL 모든 챔피언 성별 분류)
 const champData = {
   male: [
@@ -48,7 +53,7 @@ const champData = {
     { name: '쓰레쉬', id: 'Thresh' }, { name: '아무무', id: 'Amumu' }, { name: '아우렐리온 솔', id: 'AurelionSol' }, { name: '아이번', id: 'Ivern' }, { name: '아지르', id: 'Azir' },
     { name: '아크샨', id: 'Akshan' }, { name: '아트록스', id: 'Aatrox' }, { name: '알리스타', id: 'Alistar' }, { name: '야스오', id: 'Yasuo' }, { name: '에코', id: 'Ekko' },
     { name: '오공', id: 'MonkeyKing' }, { name: '오른', id: 'Ornn' }, { name: '올라프', id: 'Olaf' }, { name: '요네', id: 'Yone' }, { name: '요릭', id: 'Yorick' },
-    { name: '우디르', id: 'Udyr' }, { name: '우르곳', id: 'Urgot' }, { name: '워윅', id: 'Warwick' }, { name: '윌럼프', id: 'Nunu' }, { name: '이즈리얼', id: 'Ezreal' },
+    { name: '우디르', id: 'Udyr' }, { name: '우르곳', id: 'Urgot' }, { name: '워윅', id: 'Warwick' }, { name: '이즈리얼', id: 'Ezreal' },
     { name: '자르반 4세', id: 'JarvanIV' }, { name: '자크', id: 'Zac' }, { name: '잭스', id: 'Jax' }, { name: '제드', id: 'Zed' }, { name: '제라스', id: 'Xerath' },
     { name: '제이스', id: 'Jayce' }, { name: '진', id: 'Jhin' }, { name: '질리언', id: 'Zilean' }, { name: '초가스', id: 'Chogath' }, { name: '카사딘', id: 'Kassadin' },
     { name: '카서스', id: 'Karthus' }, { name: '카직스', id: 'Khazix' }, { name: '케인', id: 'Kayn' }, { name: '코그모', id: 'KogMaw' }, { name: '코르키', id: 'Corki' },
@@ -60,7 +65,7 @@ const champData = {
     { name: '나미', id: 'Nami' }, { name: '나르', id: 'Gnar' }, { name: '니달리', id: 'Nidalee' }, { name: '니코', id: 'Neeko' }, { name: '닐라', id: 'Nilah' },
     { name: '다이애나', id: 'Diana' }, { name: '럭스', id: 'Lux' }, { name: '레오나', id: 'Leona' }, { name: '렐', id: 'Rell' }, { name: '룰루', id: 'Lulu' },
     { name: '르블랑', id: 'Leblanc' }, { name: '리산드라', id: 'Lissandra' }, { name: '리븐', id: 'Riven' }, { name: '릴리아', id: 'Lillia' }, { name: '모르가나', id: 'Morgana' },
-    { name: '미스 포츈', id: 'MissFortune' }, { name: '바이브', id: 'Vi' }, { name: '벨베스', id: 'Belveth' }, { name: '벡스', id: 'Vex' }, { name: '뽀삐', id: 'Poppy' },
+    { name: '미스 포츈', id: 'MissFortune' }, { name: '벨베스', id: 'Belveth' }, { name: '벡스', id: 'Vex' }, { name: '뽀삐', id: 'Poppy' },
     { name: '사미라', id: 'Samira' }, { name: '세나', id: 'Senna' }, { name: '세라핀', id: 'Seraphine' }, { name: '세주아니', id: 'Sejuani' }, { name: '소나', id: 'Sona' },
     { name: '소라카', id: 'Soraka' }, { name: '쉬바나', id: 'Shyvana' }, { name: '시비르', id: 'Sivir' }, { name: '신드라', id: 'Syndra' }, { name: '아리', id: 'Ahri' },
     { name: '아칼리', id: 'Akali' }, { name: '애니', id: 'Annie' }, { name: '애니비아', id: 'Anivia' }, { name: '애쉬', id: 'Ashe' }, { name: '엘리스', id: 'Elise' },
@@ -74,6 +79,7 @@ const champData = {
 
 // 챔피언 이미지 URL 생성 함수 (Data Dragon)
 function getChampImg(id) {
+  if (!id) return 'https://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/Garen.png'
   return `https://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/${id}.png`
 }
 
@@ -322,20 +328,30 @@ async function reroll() {
   
   const lanes = ['top', 'jungle', 'mid', 'adc', 'support']
   
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < 15; i++) {
     lanes.forEach(lane => {
       const el = document.getElementById(`${lane}Champ`)
+      const imgEl = document.getElementById(`${lane}Img`)
       const list = champions[lane.toUpperCase()]
-      el.textContent = list[Math.floor(Math.random() * list.length)]
+      const randomName = list[Math.floor(Math.random() * list.length)]
+      const champId = champMapping[randomName]
+      
+      el.textContent = randomName
+      if (champId) imgEl.src = getChampImg(champId)
       el.classList.add('rolling')
     })
-    await new Promise(r => setTimeout(r, 80))
+    await new Promise(r => setTimeout(r, 70))
   }
 
   lanes.forEach(lane => {
     const el = document.getElementById(`${lane}Champ`)
+    const imgEl = document.getElementById(`${lane}Img`)
     const list = champions[lane.toUpperCase()]
-    el.textContent = list[Math.floor(Math.random() * list.length)]
+    const finalName = list[Math.floor(Math.random() * list.length)]
+    const finalId = champMapping[finalName]
+    
+    el.textContent = finalName
+    if (finalId) imgEl.src = getChampImg(finalId)
     el.classList.remove('rolling')
   })
 
