@@ -3,7 +3,9 @@ const themeBtn = document.getElementById('themeBtn')
 const rerollBtn = document.getElementById('rerollBtn')
 const copyBtn = document.getElementById('copyBtn')
 const toggleContactBtn = document.getElementById('toggleContactBtn')
+const toggleCommunityBtn = document.getElementById('toggleCommunityBtn')
 const contactPanel = document.getElementById('contactPanel')
+const communityPanel = document.getElementById('communityPanel')
 const statusMsg = document.getElementById('statusMsg')
 
 // Theme Management
@@ -27,6 +29,16 @@ toggleContactBtn.addEventListener('click', () => {
   toggleContactBtn.textContent = isHidden ? '❌ 문의 닫기' : '🤝 제휴 문의'
   if (isHidden) {
     contactPanel.scrollIntoView({ behavior: 'smooth' })
+  }
+})
+
+// Community Toggle
+toggleCommunityBtn.addEventListener('click', () => {
+  const isHidden = communityPanel.style.display === 'none'
+  communityPanel.style.display = isHidden ? 'block' : 'none'
+  toggleCommunityBtn.textContent = isHidden ? '❌ 커뮤니티 닫기' : '💬 커뮤니티'
+  if (isHidden) {
+    communityPanel.scrollIntoView({ behavior: 'smooth' })
   }
 })
 
