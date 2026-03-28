@@ -19,17 +19,17 @@ body.light-mode {
   --bg1: #f8fafc;
   --bg2: #f1f5f9;
   --card: #ffffff;
-  --line: #e2e8f0;
-  --text: #1e293b;
-  --muted: #64748b;
+  --line: #cbd5e1; /* 더 진한 회색 테두리 */
+  --text: #0f172a; /* 더 진한 검은색 텍스트 */
+  --muted: #475569;
   --accent: #b28522;
   --accent2: #0284c7;
   --danger: #dc2626;
-  --shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+  --shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
   --btn-ghost: #f1f5f9;
-  --btn-ghost-border: #e2e8f0;
-  --stat-bg: #f8fafc;
-  --stat-border: #e2e8f0;
+  --btn-ghost-border: #94a3b8;
+  --stat-bg: #f1f5f9;
+  --stat-border: #cbd5e1;
 }
 
 * {
