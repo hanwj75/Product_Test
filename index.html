@@ -27,8 +27,15 @@
         <div class="section-title">
           <h2>🎭 챔피언 상 테스트 (AI)</h2>
         </div>
-        <p style="color: var(--muted); margin-bottom: 20px;">자신의 얼굴이 남자 챔피언 상인지, 여자 챔피언 상인지 AI가 분석합니다.</p>
+        <p style="color: var(--muted); margin-bottom: 20px;">사진을 올리거나 실시간 웹캠으로 당신의 챔피언 상을 확인해보세요!</p>
         
+        <div class="controls" style="margin-bottom: 20px;">
+          <button class="ghost" id="startWebcamBtn">📹 웹캠 시작</button>
+          <button class="ghost" id="uploadTabBtn">🖼️ 이미지 업로드</button>
+        </div>
+
+        <div id="webcam-container"></div>
+
         <div class="upload-area" id="uploadArea">
           <div id="uploadPrompt">
             <span style="font-size: 3rem;">📸</span>
@@ -51,7 +58,7 @@
             <span>남챔 상 (<span id="malePercent">0</span>%)</span>
             <span>여챔 상 (<span id="femalePercent">0</span>%)</span>
           </div>
-          <button class="ghost" style="margin-top: 20px; width: 100%;" id="retryBtn">🔄 다시 테스트하기</button>
+          <button class="ghost" style="margin-top: 20px; width: 100%;" id="retryBtn">🔄 초기화</button>
         </div>
       </section>
 

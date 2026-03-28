@@ -28,7 +28,11 @@ const malePercent = document.getElementById('malePercent')
 const femalePercent = document.getElementById('femalePercent')
 const retryBtn = document.getElementById('retryBtn')
 
-let model, maxPredictions
+const startWebcamBtn = document.getElementById('startWebcamBtn')
+const uploadTabBtn = document.getElementById('uploadTabBtn')
+const webcamContainer = document.getElementById('webcam-container')
+
+let model, webcam, maxPredictions, isWebcamActive = false
 
 // Theme Management
 let isLightMode = localStorage.getItem(THEME_KEY) === 'light'
@@ -52,6 +56,7 @@ function hideAllPanels() {
   toggleContactBtn.textContent = '🤝 제휴 문의'
   toggleCommunityBtn.textContent = '💬 커뮤니티'
   faceTestBtn.textContent = '🎭 챔피언 상 테스트'
+  stopWebcam()
 }
 
 toggleContactBtn.addEventListener('click', () => {
@@ -102,6 +107,66 @@ async function initModel() {
   loadingSpinner.style.display = 'none'
 }
 
+// Webcam Logic
+async function startWebcam() {
+  if (!model) await initModel()
+  
+  if (isWebcamActive) return
+  
+  loadingSpinner.style.display = 'block'
+  uploadArea.style.display = 'none'
+  webcamContainer.style.display = 'block'
+  resultContainer.style.display = 'block'
+  
+  try {
+    const flip = true
+    webcam = new tmImage.Webcam(400, 400, flip)
+    await webcam.setup()
+    await webcam.play()
+    isWebcamActive = true
+    window.requestAnimationFrame(webcamLoop)
+    
+    webcamContainer.innerHTML = ''
+    webcamContainer.appendChild(webcam.canvas)
+    startWebcamBtn.classList.add('primary')
+    uploadTabBtn.classList.remove('primary')
+  } catch (e) {
+    console.error(e)
+    alert('웹캠을 시작할 수 없습니다. 권한을 확인해주세요.')
+    showUploadTab()
+  }
+  loadingSpinner.style.display = 'none'
+}
+
+function stopWebcam() {
+  if (webcam) {
+    webcam.stop()
+    isWebcamActive = false
+    webcamContainer.style.display = 'none'
+    startWebcamBtn.classList.remove('primary')
+  }
+}
+
+async function webcamLoop() {
+  if (!isWebcamActive) return
+  webcam.update()
+  await predict(webcam.canvas)
+  window.requestAnimationFrame(webcamLoop)
+}
+
+function showUploadTab() {
+  stopWebcam()
+  uploadArea.style.display = 'flex'
+  webcamContainer.style.display = 'none'
+  uploadTabBtn.classList.add('primary')
+  startWebcamBtn.classList.remove('primary')
+  retryBtn.click()
+}
+
+startWebcamBtn.addEventListener('click', startWebcam)
+uploadTabBtn.addEventListener('click', showUploadTab)
+
+// Upload Logic
 uploadArea.addEventListener('click', () => imageUpload.click())
 
 uploadArea.addEventListener('dragover', (e) => {
@@ -128,20 +193,16 @@ function handleImage(file) {
     previewImg.src = e.target.result
     previewImg.style.display = 'block'
     uploadPrompt.style.display = 'none'
-    predict()
+    resultContainer.style.display = 'block'
+    predict(previewImg)
   }
   reader.readAsDataURL(file)
 }
 
-async function predict() {
-  if (!model) await initModel()
-  loadingSpinner.style.display = 'block'
-  resultContainer.style.display = 'none'
-
-  // Give some time for UI to update
-  await new Promise(r => setTimeout(r, 800))
-
-  const prediction = await model.predict(previewImg)
+async function predict(inputElement) {
+  if (!model) return
+  
+  const prediction = await model.predict(inputElement)
   
   let maleScore = 0
   let femaleScore = 0
@@ -161,19 +222,20 @@ async function predict() {
 
   if (mValue > fValue) {
     resultLabel.textContent = '강인한 "남자 챔피언" 상!'
-    resultMessage.textContent = '당신은 가렌, 다리우스처럼 묵직하고 강인한 포스를 가진 남자 챔피언 상입니다.'
+    resultMessage.textContent = '가렌, 다리우스처럼 강인한 남챔 상입니다.'
   } else {
     resultLabel.textContent = '아름다운 "여자 챔피언" 상!'
-    resultMessage.textContent = '당신은 아리, 럭스처럼 화려하고 매력적인 분위기를 가진 여자 챔피언 상입니다.'
+    resultMessage.textContent = '아리, 럭스처럼 매력적인 여챔 상입니다.'
   }
-
-  loadingSpinner.style.display = 'none'
-  resultContainer.style.display = 'block'
 }
 
 retryBtn.addEventListener('click', () => {
+  if (isWebcamActive) {
+    // 웹캠 모드일 때는 초기화가 큰 의미 없으므로 무시하거나 웹캠을 끔
+    return
+  }
   previewImg.style.display = 'none'
-  uploadPrompt.style.display = 'block'
+  uploadPrompt.style.display = 'flex'
   resultContainer.style.display = 'none'
   imageUpload.value = ''
 })
