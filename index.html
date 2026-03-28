@@ -6,10 +6,14 @@
     <title>롤 챔피언 추천기</title>
     <!-- CSS 연결 -->
     <link rel="stylesheet" href="style.css">
+    <!-- TensorFlow & Teachable Machine 라이브러리 -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js"></script>
   </head>
   <body>
     <div class="wrap">
       <div class="theme-toggle">
+        <button id="faceTestBtn">🎭 챔피언 상 테스트</button>
         <button id="themeBtn">☀️ 라이트 모드</button>
       </div>
 
@@ -17,6 +21,39 @@
         <h1>⚔️ LoL Champion Picker</h1>
         <p>오늘 뭐 할지 고민인가요? 라인별로 랜덤 챔피언을 골라드립니다.</p>
       </div>
+
+      <!-- AI Face Test Section -->
+      <section class="panel face-test-section" id="faceTestPanel" style="display: none;">
+        <div class="section-title">
+          <h2>🎭 챔피언 상 테스트 (AI)</h2>
+        </div>
+        <p style="color: var(--muted); margin-bottom: 20px;">자신의 얼굴이 남자 챔피언 상인지, 여자 챔피언 상인지 AI가 분석합니다.</p>
+        
+        <div class="upload-area" id="uploadArea">
+          <div id="uploadPrompt">
+            <span style="font-size: 3rem;">📸</span>
+            <p>클릭하거나 이미지를 드래그하여 업로드하세요</p>
+          </div>
+          <img id="previewImg" src="#" alt="미리보기">
+          <input type="file" id="imageUpload" accept="image/*" style="display: none;">
+        </div>
+
+        <div class="loading-spinner" id="loadingSpinner"></div>
+
+        <div class="result-container" id="resultContainer">
+          <div class="result-title" id="resultLabel">분석 완료</div>
+          <p id="resultMessage" style="color: var(--muted); margin-bottom: 15px;"></p>
+          <div class="result-bar-container">
+            <div class="result-bar bar-male" id="maleBar"></div>
+            <div class="result-bar bar-female" id="femaleBar"></div>
+          </div>
+          <div style="display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--muted);">
+            <span>남챔 상 (<span id="malePercent">0</span>%)</span>
+            <span>여챔 상 (<span id="femalePercent">0</span>%)</span>
+          </div>
+          <button class="ghost" style="margin-top: 20px; width: 100%;" id="retryBtn">🔄 다시 테스트하기</button>
+        </div>
+      </section>
 
       <div class="lane-grid">
         <div class="lane-card">

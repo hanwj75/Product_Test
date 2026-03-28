@@ -1,12 +1,34 @@
 const THEME_KEY = 'lol_theme_v1'
+const MODEL_URL = 'https://teachablemachine.withgoogle.com/models/oiw1LN5GA/'
+
 const themeBtn = document.getElementById('themeBtn')
 const rerollBtn = document.getElementById('rerollBtn')
 const copyBtn = document.getElementById('copyBtn')
 const toggleContactBtn = document.getElementById('toggleContactBtn')
 const toggleCommunityBtn = document.getElementById('toggleCommunityBtn')
+const faceTestBtn = document.getElementById('faceTestBtn')
+
 const contactPanel = document.getElementById('contactPanel')
 const communityPanel = document.getElementById('communityPanel')
+const faceTestPanel = document.getElementById('faceTestPanel')
 const statusMsg = document.getElementById('statusMsg')
+
+// AI Face Test Elements
+const imageUpload = document.getElementById('imageUpload')
+const uploadArea = document.getElementById('uploadArea')
+const previewImg = document.getElementById('previewImg')
+const uploadPrompt = document.getElementById('uploadPrompt')
+const loadingSpinner = document.getElementById('loadingSpinner')
+const resultContainer = document.getElementById('resultContainer')
+const resultLabel = document.getElementById('resultLabel')
+const resultMessage = document.getElementById('resultMessage')
+const maleBar = document.getElementById('maleBar')
+const femaleBar = document.getElementById('femaleBar')
+const malePercent = document.getElementById('malePercent')
+const femalePercent = document.getElementById('femalePercent')
+const retryBtn = document.getElementById('retryBtn')
+
+let model, maxPredictions
 
 // Theme Management
 let isLightMode = localStorage.getItem(THEME_KEY) === 'light'
@@ -22,26 +44,141 @@ themeBtn.addEventListener('click', () => {
   themeBtn.textContent = isLightMode ? '🌙 다크 모드' : '☀️ 라이트 모드'
 })
 
-// Contact Form Toggle
+// Panels Toggle
+function hideAllPanels() {
+  contactPanel.style.display = 'none'
+  communityPanel.style.display = 'none'
+  faceTestPanel.style.display = 'none'
+  toggleContactBtn.textContent = '🤝 제휴 문의'
+  toggleCommunityBtn.textContent = '💬 커뮤니티'
+  faceTestBtn.textContent = '🎭 챔피언 상 테스트'
+}
+
 toggleContactBtn.addEventListener('click', () => {
   const isHidden = contactPanel.style.display === 'none'
-  contactPanel.style.display = isHidden ? 'block' : 'none'
-  toggleContactBtn.textContent = isHidden ? '❌ 문의 닫기' : '🤝 제휴 문의'
+  hideAllPanels()
   if (isHidden) {
+    contactPanel.style.display = 'block'
+    toggleContactBtn.textContent = '❌ 문의 닫기'
     contactPanel.scrollIntoView({ behavior: 'smooth' })
   }
 })
 
-// Community Toggle
 toggleCommunityBtn.addEventListener('click', () => {
   const isHidden = communityPanel.style.display === 'none'
-  communityPanel.style.display = isHidden ? 'block' : 'none'
-  toggleCommunityBtn.textContent = isHidden ? '❌ 커뮤니티 닫기' : '💬 커뮤니티'
+  hideAllPanels()
   if (isHidden) {
+    communityPanel.style.display = 'block'
+    toggleCommunityBtn.textContent = '❌ 커뮤니티 닫기'
     communityPanel.scrollIntoView({ behavior: 'smooth' })
   }
 })
 
+faceTestBtn.addEventListener('click', () => {
+  const isHidden = faceTestPanel.style.display === 'none'
+  hideAllPanels()
+  if (isHidden) {
+    faceTestPanel.style.display = 'block'
+    faceTestBtn.textContent = '❌ 테스트 닫기'
+    faceTestPanel.scrollIntoView({ behavior: 'smooth' })
+    initModel()
+  }
+})
+
+// AI Model Logic
+async function initModel() {
+  if (model) return
+  loadingSpinner.style.display = 'block'
+  try {
+    const modelURL = MODEL_URL + 'model.json'
+    const metadataURL = MODEL_URL + 'metadata.json'
+    model = await tmImage.load(modelURL, metadataURL)
+    maxPredictions = model.getTotalClasses()
+    console.log('Model loaded')
+  } catch (e) {
+    console.error('Failed to load model', e)
+    alert('AI 모델을 불러오는데 실패했습니다.')
+  }
+  loadingSpinner.style.display = 'none'
+}
+
+uploadArea.addEventListener('click', () => imageUpload.click())
+
+uploadArea.addEventListener('dragover', (e) => {
+  e.preventDefault()
+  uploadArea.classList.add('dragover')
+})
+
+uploadArea.addEventListener('dragleave', () => uploadArea.classList.remove('dragover'))
+
+uploadArea.addEventListener('drop', (e) => {
+  e.preventDefault()
+  uploadArea.classList.remove('dragover')
+  const files = e.dataTransfer.files
+  if (files.length > 0) handleImage(files[0])
+})
+
+imageUpload.addEventListener('change', (e) => {
+  if (e.target.files.length > 0) handleImage(e.target.files[0])
+})
+
+function handleImage(file) {
+  const reader = new FileReader()
+  reader.onload = (e) => {
+    previewImg.src = e.target.result
+    previewImg.style.display = 'block'
+    uploadPrompt.style.display = 'none'
+    predict()
+  }
+  reader.readAsDataURL(file)
+}
+
+async function predict() {
+  if (!model) await initModel()
+  loadingSpinner.style.display = 'block'
+  resultContainer.style.display = 'none'
+
+  // Give some time for UI to update
+  await new Promise(r => setTimeout(r, 800))
+
+  const prediction = await model.predict(previewImg)
+  
+  let maleScore = 0
+  let femaleScore = 0
+
+  prediction.forEach(p => {
+    if (p.className === '남자 챔피언') maleScore = p.probability
+    if (p.className === '여자 챔피언') femaleScore = p.probability
+  })
+
+  const mValue = Math.round(maleScore * 100)
+  const fValue = Math.round(femaleScore * 100)
+
+  malePercent.textContent = mValue
+  femalePercent.textContent = fValue
+  maleBar.style.width = mValue + '%'
+  femaleBar.style.width = fValue + '%'
+
+  if (mValue > fValue) {
+    resultLabel.textContent = '강인한 "남자 챔피언" 상!'
+    resultMessage.textContent = '당신은 가렌, 다리우스처럼 묵직하고 강인한 포스를 가진 남자 챔피언 상입니다.'
+  } else {
+    resultLabel.textContent = '아름다운 "여자 챔피언" 상!'
+    resultMessage.textContent = '당신은 아리, 럭스처럼 화려하고 매력적인 분위기를 가진 여자 챔피언 상입니다.'
+  }
+
+  loadingSpinner.style.display = 'none'
+  resultContainer.style.display = 'block'
+}
+
+retryBtn.addEventListener('click', () => {
+  previewImg.style.display = 'none'
+  uploadPrompt.style.display = 'block'
+  resultContainer.style.display = 'none'
+  imageUpload.value = ''
+})
+
+// Champion Picker Logic
 const champions = {
   TOP: ['가렌', '다리우스', '잭스', '피오라', '카밀', '레넥톤', '아트록스', '오른', '말파이트', '제이스', '갱플랭크', '나르', '퀸', '티모'],
   JUNGLE: ['리 신', '자르반 4세', '카직스', '바이브', '니달리', '엘리스', '세주아니', '잭', '그레이브즈', '킨드레드', '에코', '샤코', '녹턴'],
@@ -57,7 +194,6 @@ async function reroll() {
   
   const lanes = ['top', 'jungle', 'mid', 'adc', 'support']
   
-  // Rolling effect
   for (let i = 0; i < 10; i++) {
     lanes.forEach(lane => {
       const el = document.getElementById(`${lane}Champ`)
@@ -68,7 +204,6 @@ async function reroll() {
     await new Promise(r => setTimeout(r, 80))
   }
 
-  // Final selection
   lanes.forEach(lane => {
     const el = document.getElementById(`${lane}Champ`)
     const list = champions[lane.toUpperCase()]
