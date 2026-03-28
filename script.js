@@ -33,22 +33,48 @@ const webcamContainer = document.getElementById('webcam-container')
 
 let model, webcam, maxPredictions, isWebcamActive = false
 
-// 챔피언 데이터 매칭 (성별 상 대표 챔피언)
+// 챔피언 데이터 매칭 (LoL 모든 챔피언 성별 분류)
 const champData = {
   male: [
-    { name: '가렌', img: 'https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Garen_0.jpg', msg: '당신은 가렌처럼 정의롭고 강인한 포스를 가진 "남챔 상"입니다!' },
-    { name: '다리우스', img: 'https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Darius_0.jpg', msg: '당신은 다리우스처럼 압도적인 위엄과 카리스마를 가진 "남챔 상"입니다!' },
-    { name: '야스오', img: 'https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Yasuo_0.jpg', msg: '당신은 야스오처럼 날렵하고 고독한 검사의 분위기를 가진 "남챔 상"입니다!' },
-    { name: '리 신', img: 'https://ddragon.leagueoflegends.com/cdn/img/champion/splash/LeeSin_0.jpg', msg: '당신은 리 신처럼 화려한 기술과 불굴의 의지를 가진 "남챔 상"입니다!' },
-    { name: '제드', img: 'https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Zed_0.jpg', msg: '당신은 제드처럼 차갑고 치명적인 암살자의 포스를 가진 "남챔 상"입니다!' }
+    { name: '가렌', id: 'Garen' }, { name: '갈리오', id: 'Galio' }, { name: '갱플랭크', id: 'Gangplank' }, { name: '그라가스', id: 'Gragas' }, { name: '그레이브즈', id: 'Graves' },
+    { name: '나서스', id: 'Nasus' }, { name: '노틸러스', id: 'Nautilus' }, { name: '녹턴', id: 'Nocturne' }, { name: '누누와 윌럼프', id: 'Nunu' }, { name: '다리우스', id: 'Darius' },
+    { name: '라이즈', id: 'Ryze' }, { name: '라칸', id: 'Rakan' }, { name: '람머스', id: 'Ramus' }, { name: '럼블', id: 'Rumble' }, { name: '레넥톤', id: 'Renekton' },
+    { name: '렝가', id: 'Rengar' }, { name: '루시안', id: 'Lucian' }, { name: '리 신', id: 'LeeSin' }, { name: '마스터 이', id: 'MasterYi' }, { name: '마오카이', id: 'Maokai' },
+    { name: '말자하', id: 'Malzahar' }, { name: '말파이트', id: 'Malphite' }, { name: '모데카이저', id: 'Mordekaiser' }, { name: '문도 박사', id: 'DrMundo' }, { name: '바드', id: 'Bard' },
+    { name: '바루스', id: 'Varus' }, { name: '바이', id: 'Vi' }, { name: '베이가', id: 'Veigar' }, { name: '벨코즈', id: 'Velkoz' }, { name: '볼리베어', id: 'Volibear' },
+    { name: '브라움', id: 'Braum' }, { name: '브랜드', id: 'Brand' }, { name: '블라디미르', id: 'Vladimir' }, { name: '블리츠크랭크', id: 'Blitzcrank' }, { name: '비에고', id: 'Viego' },
+    { name: '빅토르', id: 'Viktor' }, { name: '사이온', id: 'Sion' }, { name: '사일러스', id: 'Sylas' }, { name: '샤코', id: 'Shaco' }, { name: '세트', id: 'Sett' },
+    { name: '쉔', id: 'Shen' }, { name: '스웨인', id: 'Swain' }, { name: '스카너', id: 'Skarner' }, { name: '신 짜오', id: 'XinZhao' }, { name: '신지드', id: 'Singed' },
+    { name: '쓰레쉬', id: 'Thresh' }, { name: '아무무', id: 'Amumu' }, { name: '아우렐리온 솔', id: 'AurelionSol' }, { name: '아이번', id: 'Ivern' }, { name: '아지르', id: 'Azir' },
+    { name: '아크샨', id: 'Akshan' }, { name: '아트록스', id: 'Aatrox' }, { name: '알리스타', id: 'Alistar' }, { name: '야스오', id: 'Yasuo' }, { name: '에코', id: 'Ekko' },
+    { name: '오공', id: 'MonkeyKing' }, { name: '오른', id: 'Ornn' }, { name: '올라프', id: 'Olaf' }, { name: '요네', id: 'Yone' }, { name: '요릭', id: 'Yorick' },
+    { name: '우디르', id: 'Udyr' }, { name: '우르곳', id: 'Urgot' }, { name: '워윅', id: 'Warwick' }, { name: '윌럼프', id: 'Nunu' }, { name: '이즈리얼', id: 'Ezreal' },
+    { name: '자르반 4세', id: 'JarvanIV' }, { name: '자크', id: 'Zac' }, { name: '잭스', id: 'Jax' }, { name: '제드', id: 'Zed' }, { name: '제라스', id: 'Xerath' },
+    { name: '제이스', id: 'Jayce' }, { name: '진', id: 'Jhin' }, { name: '질리언', id: 'Zilean' }, { name: '초가스', id: 'Chogath' }, { name: '카사딘', id: 'Kassadin' },
+    { name: '카서스', id: 'Karthus' }, { name: '카직스', id: 'Khazix' }, { name: '케인', id: 'Kayn' }, { name: '코그모', id: 'KogMaw' }, { name: '코르키', id: 'Corki' },
+    { name: '클레드', id: 'Kled' }, { name: '킨드레드', id: 'Kindred' }, { name: '타릭', id: 'Taric' }, { name: '탈론', id: 'Talon' }, { name: '트런들', id: 'Trundle' },
+    { name: '트린다미어', id: 'Tryndamere' }, { name: '트위스티드 페이트', id: 'TwistedFate' }, { name: '트위치', id: 'Twitch' }, { name: '판테온', id: 'Pantheon' }, { name: '피들스틱', id: 'Fiddlesticks' },
+    { name: '피즈', id: 'Fizz' }, { name: '하이머딩거', id: 'Heimerdinger' }, { name: '헤카림', id: 'Hecarim' }
   ],
   female: [
-    { name: '아리', img: 'https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Ahri_0.jpg', msg: '당신은 아리처럼 화려하고 매혹적인 분위기를 가진 "여챔 상"입니다!' },
-    { name: '럭스', img: 'https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Lux_0.jpg', msg: '당신은 럭스처럼 밝고 긍정적인 에너지가 넘치는 "여챔 상"입니다!' },
-    { name: '카이사', img: 'https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Kaisa_0.jpg', msg: '당신은 카이사처럼 신비롭고 강렬한 눈빛을 가진 "여챔 상"입니다!' },
-    { name: '이렐리아', img: 'https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Irelia_0.jpg', msg: '당신은 이렐리아처럼 우아하면서도 치명적인 춤사위를 가진 "여챔 상"입니다!' },
-    { name: '세라핀', img: 'https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Seraphine_0.jpg', msg: '당신은 세라핀처럼 사랑스럽고 사람들을 매료시키는 목소리를 가진 "여챔 상"입니다!' }
+    { name: '나미', id: 'Nami' }, { name: '나르', id: 'Gnar' }, { name: '니달리', id: 'Nidalee' }, { name: '니코', id: 'Neeko' }, { name: '닐라', id: 'Nilah' },
+    { name: '다이애나', id: 'Diana' }, { name: '럭스', id: 'Lux' }, { name: '레오나', id: 'Leona' }, { name: '렐', id: 'Rell' }, { name: '룰루', id: 'Lulu' },
+    { name: '르블랑', id: 'Leblanc' }, { name: '리산드라', id: 'Lissandra' }, { name: '리븐', id: 'Riven' }, { name: '릴리아', id: 'Lillia' }, { name: '모르가나', id: 'Morgana' },
+    { name: '미스 포츈', id: 'MissFortune' }, { name: '바이브', id: 'Vi' }, { name: '벨베스', id: 'Belveth' }, { name: '벡스', id: 'Vex' }, { name: '뽀삐', id: 'Poppy' },
+    { name: '사미라', id: 'Samira' }, { name: '세나', id: 'Senna' }, { name: '세라핀', id: 'Seraphine' }, { name: '세주아니', id: 'Sejuani' }, { name: '소나', id: 'Sona' },
+    { name: '소라카', id: 'Soraka' }, { name: '쉬바나', id: 'Shyvana' }, { name: '시비르', id: 'Sivir' }, { name: '신드라', id: 'Syndra' }, { name: '아리', id: 'Ahri' },
+    { name: '아칼리', id: 'Akali' }, { name: '애니', id: 'Annie' }, { name: '애니비아', id: 'Anivia' }, { name: '애쉬', id: 'Ashe' }, { name: '엘리스', id: 'Elise' },
+    { name: '오리아나', id: 'Orianna' }, { name: '유미', id: 'Yuumi' }, { name: '이렐리아', id: 'Irelia' }, { name: '이벨린', id: 'Evelynn' }, { name: '일라오이' , id: 'Illaoi' },
+    { name: '자이라', id: 'Zyra' }, { name: '자야', id: 'Xayah' }, { name: '잔나', id: 'Janna' }, { name: '제리', id: 'Zeri' }, { name: '조이', id: 'Zoe' },
+    { name: '징크스', id: 'Jinx' }, { name: '카르마', id: 'Karma' }, { name: '카미유', id: 'Camille' }, { name: '카시오페아', id: 'Cassiopeia' }, { name: '카이사', id: 'Kaisa' },
+    { name: '카타리나', id: 'Katarina' }, { name: '칼리스타', id: 'Kalista' }, { name: '케이틀린', id: 'Caitlyn' }, { name: '케일', id: 'Kayle' }, { name: '퀸', id: 'Quinn' },
+    { name: '트리스타나', id: 'Tristana' }, { name: '피오라', id: 'Fiora' }
   ]
+}
+
+// 챔피언 이미지 URL 생성 함수 (Data Dragon)
+function getChampImg(id) {
+  return `https://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/${id}.png`
 }
 
 // Theme Management
@@ -236,9 +262,9 @@ async function predict(inputElement) {
   if (mValue > fValue) {
     if (!isWebcamActive || champImg.src.includes('placeholder') || champImg.src === '') {
        const randomChamp = champData.male[Math.floor(Math.random() * champData.male.length)]
-       champImg.src = randomChamp.img
+       champImg.src = getChampImg(randomChamp.id)
        resultLabel.textContent = `당신은 "${randomChamp.name}" 상!`
-       resultMessage.textContent = randomChamp.msg
+       resultMessage.textContent = `당신은 ${randomChamp.name}처럼 강인하고 독보적인 분위기를 가진 남챔 상입니다.`
     }
     similarityPercent.textContent = mValue
     singleResultBar.className = 'result-bar bar-male'
@@ -247,9 +273,9 @@ async function predict(inputElement) {
   } else {
     if (!isWebcamActive || champImg.src.includes('placeholder') || champImg.src === '') {
        const randomChamp = champData.female[Math.floor(Math.random() * champData.female.length)]
-       champImg.src = randomChamp.img
+       champImg.src = getChampImg(randomChamp.id)
        resultLabel.textContent = `당신은 "${randomChamp.name}" 상!`
-       resultMessage.textContent = randomChamp.msg
+       resultMessage.textContent = `당신은 ${randomChamp.name}처럼 매력적이고 화려한 분위기를 가진 여챔 상입니다.`
     }
     similarityPercent.textContent = fValue
     singleResultBar.className = 'result-bar bar-female'
@@ -270,7 +296,7 @@ retryBtn.addEventListener('click', () => {
   startWebcamBtn.classList.remove('primary')
 })
 
-// Champion Picker Logic (Expanded from OP.GG Data)
+// Champion Picker Logic
 const champions = {
   TOP: [
     '가렌', '나르', '나서스', '다리우스', '라이즈', '람머스', '럼블', '레넥톤', '렝가', '리븐', '리산드라', '마오카이', '말파이트', '모데카이저', '문도 박사', '볼리베어', '뽀삐', '사이온', '사일러스', '세트', '쉔', '신지드', '아트록스', '아칼리', '야스오', '오공', '오른', '올라프', '요릭', '요네', '우디르', '우르곳', '워윅', '이렐리아', '이즈리얼', '일라오이', '자크', '잭스', '제이스', '초가스', '카밀', '카시오페아', '카르마', '카서스', '카타리나', '케넨', '케이틀린', '케일', '퀸', '클레드', '타릭', '트린다미어', '판테온', '피오라', '하이머딩거', '헤카림'
