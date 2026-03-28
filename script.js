@@ -38,12 +38,16 @@ const champData = {
   male: [
     { name: '가렌', img: 'https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Garen_0.jpg', msg: '당신은 가렌처럼 정의롭고 강인한 포스를 가진 "남챔 상"입니다!' },
     { name: '다리우스', img: 'https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Darius_0.jpg', msg: '당신은 다리우스처럼 압도적인 위엄과 카리스마를 가진 "남챔 상"입니다!' },
-    { name: '야스오', img: 'https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Yasuo_0.jpg', msg: '당신은 야스오처럼 날렵하고 고독한 검사의 분위기를 가진 "남챔 상"입니다!' }
+    { name: '야스오', img: 'https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Yasuo_0.jpg', msg: '당신은 야스오처럼 날렵하고 고독한 검사의 분위기를 가진 "남챔 상"입니다!' },
+    { name: '리 신', img: 'https://ddragon.leagueoflegends.com/cdn/img/champion/splash/LeeSin_0.jpg', msg: '당신은 리 신처럼 화려한 기술과 불굴의 의지를 가진 "남챔 상"입니다!' },
+    { name: '제드', img: 'https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Zed_0.jpg', msg: '당신은 제드처럼 차갑고 치명적인 암살자의 포스를 가진 "남챔 상"입니다!' }
   ],
   female: [
     { name: '아리', img: 'https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Ahri_0.jpg', msg: '당신은 아리처럼 화려하고 매혹적인 분위기를 가진 "여챔 상"입니다!' },
     { name: '럭스', img: 'https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Lux_0.jpg', msg: '당신은 럭스처럼 밝고 긍정적인 에너지가 넘치는 "여챔 상"입니다!' },
-    { name: '카이사', img: 'https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Kaisa_0.jpg', msg: '당신은 카이사처럼 신비롭고 강렬한 눈빛을 가진 "여챔 상"입니다!' }
+    { name: '카이사', img: 'https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Kaisa_0.jpg', msg: '당신은 카이사처럼 신비롭고 강렬한 눈빛을 가진 "여챔 상"입니다!' },
+    { name: '이렐리아', img: 'https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Irelia_0.jpg', msg: '당신은 이렐리아처럼 우아하면서도 치명적인 춤사위를 가진 "여챔 상"입니다!' },
+    { name: '세라핀', img: 'https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Seraphine_0.jpg', msg: '당신은 세라핀처럼 사랑스럽고 사람들을 매료시키는 목소리를 가진 "여챔 상"입니다!' }
   ]
 }
 
@@ -214,16 +218,13 @@ async function predict(inputElement) {
   
   const prediction = await model.predict(inputElement)
   
-  // Teachable Machine의 클래스 이름이 다를 수 있으므로 인덱스로 접근하거나 소문자로 비교
   let maleScore = 0
   let femaleScore = 0
 
   prediction.forEach(p => {
-    // 클래스명에서 '남' 또는 'male'이 포함되면 남성으로 판단
     if (p.className.includes('남') || p.className.toLowerCase().includes('male')) {
       maleScore = p.probability
     } 
-    // 클래스명에서 '여' 또는 'female'이 포함되면 여성으로 판단
     else if (p.className.includes('여') || p.className.toLowerCase().includes('female')) {
       femaleScore = p.probability
     }
@@ -232,9 +233,7 @@ async function predict(inputElement) {
   const mValue = Math.round(maleScore * 100)
   const fValue = Math.round(femaleScore * 100)
 
-  // 더 높은 확률 쪽 선택
   if (mValue > fValue) {
-    // 결과가 이미 표시 중이고 웹캠 모드라면 챔피언 이미지가 너무 자주 바뀌지 않도록 처리
     if (!isWebcamActive || champImg.src.includes('placeholder') || champImg.src === '') {
        const randomChamp = champData.male[Math.floor(Math.random() * champData.male.length)]
        champImg.src = randomChamp.img
@@ -243,7 +242,7 @@ async function predict(inputElement) {
     }
     similarityPercent.textContent = mValue
     singleResultBar.className = 'result-bar bar-male'
-    singleResultBar.style.width = Math.max(mValue, 5) + '%' // 최소 5%는 보이게
+    singleResultBar.style.width = Math.max(mValue, 5) + '%'
     singleResultBar.textContent = `남챔 상 ${mValue}% 일치`
   } else {
     if (!isWebcamActive || champImg.src.includes('placeholder') || champImg.src === '') {
@@ -266,18 +265,28 @@ retryBtn.addEventListener('click', () => {
   resultContainer.style.display = 'none'
   uploadArea.style.display = 'flex'
   imageUpload.value = ''
-  champImg.src = '' // 이미지 초기화
+  champImg.src = ''
   uploadTabBtn.classList.remove('primary')
   startWebcamBtn.classList.remove('primary')
 })
 
-// Champion Picker Logic
+// Champion Picker Logic (Expanded from OP.GG Data)
 const champions = {
-  TOP: ['가렌', '다리우스', '잭스', '피오라', '카밀', '레넥톤', '아트록스', '오른', '말파이트', '제이스', '갱플랭크', '나르', '퀸', '티모'],
-  JUNGLE: ['리 신', '자르반 4세', '카직스', '바이브', '니달리', '엘리스', '세주아니', '잭', '그레이브즈', '킨드레드', '에코', '샤코', '녹턴'],
-  MID: ['아리', '야스오', '요네', '제드', '신드라', '오리아나', '빅토르', '르블랑', '카타리나', '아지르', '벡스', '조이', '탈론', '럭스'],
-  ADC: ['이즈리얼', '카이사', '베인', '징크스', '루시안', '애쉬', '케이틀린', '사미라', '드레이븐', '바루스', '닐라', '트리스타나', '자야'],
-  SUPPORT: ['쓰레쉬', '레오나', '노틸러스', '룰루', '잔나', '소라카', '파이크', '세나', '바드', '라칸', '블리츠크랭크', '유미', '나미']
+  TOP: [
+    '가렌', '나르', '나서스', '다리우스', '라이즈', '람머스', '럼블', '레넥톤', '렝가', '리븐', '리산드라', '마오카이', '말파이트', '모데카이저', '문도 박사', '볼리베어', '뽀삐', '사이온', '사일러스', '세트', '쉔', '신지드', '아트록스', '아칼리', '야스오', '오공', '오른', '올라프', '요릭', '요네', '우디르', '우르곳', '워윅', '이렐리아', '이즈리얼', '일라오이', '자크', '잭스', '제이스', '초가스', '카밀', '카시오페아', '카르마', '카서스', '카타리나', '케넨', '케이틀린', '케일', '퀸', '클레드', '타릭', '트린다미어', '판테온', '피오라', '하이머딩거', '헤카림'
+  ],
+  JUNGLE: [
+    '그레이브즈', '그라가스', '녹턴', '누누와 윌럼프', '니달리', '람머스', '렉사이', '렝가', '리 신', '릴리아', '마스터 이', '문도 박사', '바이', '벨베스', '볼리베어', '비에고', '뽀삐', '샤코', '세주아니', '쉬바나', '신 짜오', '아무무', '아이번', '엘리스', '오공', '올라프', '워윅', '이벨린', '자르반 4세', '자크', '잭스', '카서스', '카직스', '케인', '킨드레드', '탈리야', '탈론', '트런들', '피들스틱', '헤카림'
+  ],
+  MID: [
+    '가렌', '갈리오', '니코', '다이애나', '라이즈', '럭스', '르블랑', '리산드라', '말자하', '모데카이저', '벡스', '벨코즈', '빅토르', '사일러스', '세라핀', '세트', '스웨인', '신드라', '아리', '아우렐리온 솔', '아지르', '아칼리', '아크샨', '애니', '애니비아', '야스오', '에코', '오리아나', '요네', '이렐리아', '제드', '제라스', '조이', '직스', '카사딘', '카시오페아', '카타리나', '코르키', '탈리야', '탈론', '트위스티드 페이트', '판테온', '피즈'
+  ],
+  ADC: [
+    '드레이븐', '루시안', '미스 포츈', '바루스', '베인', '사미라', '세나', '시비르', '아펠리오스', '애쉬', '이즈리얼', '자야', '제리', '징크스', '진', '카이사', '칼리스타', '코그모', '퀸', '트리스타나', '트위치'
+  ],
+  SUPPORT: [
+    '갈리오', '나미', '노틸러스', '니코', '라칸', '럭스', '레오나', '렐', '르블랑', '룰루', '모르가나', '마오카이', '바드', '벨코즈', '브라움', '브랜드', '블리츠크랭크', '뽀삐', '세나', '세라핀', '소나', '소라카', '스웨인', '쓰레쉬', '아무무', '알리스타', '애쉬', '유미', '자이라', '잔나', '제라스', '질리언', '카르마', '타릭', '파이크'
+  ]
 }
 
 async function reroll() {
