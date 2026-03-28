@@ -16,6 +16,27 @@
         --accent2: #38bdf8;
         --danger: #ef4444;
         --shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+        --btn-ghost: rgba(255, 255, 255, 0.08);
+        --btn-ghost-border: rgba(255, 255, 255, 0.12);
+        --stat-bg: rgba(255, 255, 255, 0.06);
+        --stat-border: rgba(255, 255, 255, 0.1);
+      }
+
+      body.light-mode {
+        --bg1: #f8fafc;
+        --bg2: #f1f5f9;
+        --card: #ffffff;
+        --line: #e2e8f0;
+        --text: #1e293b;
+        --muted: #64748b;
+        --accent: #16a34a;
+        --accent2: #0284c7;
+        --danger: #dc2626;
+        --shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+        --btn-ghost: #f1f5f9;
+        --btn-ghost-border: #e2e8f0;
+        --stat-bg: #f8fafc;
+        --stat-border: #e2e8f0;
       }
 
       * {
@@ -30,27 +51,50 @@
         background:
           radial-gradient(
             circle at top left,
-            rgba(56, 189, 248, 0.18),
+            rgba(56, 189, 248, 0.12),
             transparent 28%
           ),
           radial-gradient(
             circle at top right,
-            rgba(34, 197, 94, 0.16),
+            rgba(34, 197, 94, 0.1),
             transparent 24%
           ),
           linear-gradient(135deg, var(--bg1), var(--bg2));
         min-height: 100vh;
         padding: 24px;
+        transition: background 0.3s ease, color 0.3s ease;
+      }
+
+      .theme-toggle {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        z-index: 100;
+      }
+
+      .theme-toggle button {
+        background: var(--card);
+        border: 1px solid var(--line);
+        color: var(--text);
+        padding: 8px 16px;
+        border-radius: 12px;
+        cursor: pointer;
+        font-size: 0.9rem;
+        font-weight: 600;
+        box-shadow: var(--shadow);
+        transition: all 0.2s ease;
       }
 
       .wrap {
         max-width: 1100px;
         margin: 0 auto;
+        position: relative;
       }
 
       .hero {
         text-align: center;
-        margin-bottom: 22px;
+        margin-bottom: 32px;
+        margin-top: 40px;
       }
 
       .hero h1 {
@@ -79,6 +123,7 @@
         backdrop-filter: blur(14px);
         -webkit-backdrop-filter: blur(14px);
         padding: 22px;
+        transition: background 0.3s ease, border 0.3s ease;
       }
 
       .section-title {
@@ -97,8 +142,8 @@
       .badge {
         padding: 6px 10px;
         border-radius: 999px;
-        background: rgba(255, 255, 255, 0.1);
-        border: 1px solid rgba(255, 255, 255, 0.14);
+        background: var(--stat-bg);
+        border: 1px solid var(--stat-border);
         color: var(--muted);
         font-size: 0.85rem;
       }
@@ -108,10 +153,10 @@
         border-radius: 24px;
         background: linear-gradient(
           180deg,
-          rgba(255, 255, 255, 0.1),
-          rgba(255, 255, 255, 0.05)
+          var(--stat-bg),
+          rgba(255, 255, 255, 0.02)
         );
-        border: 1px solid rgba(255, 255, 255, 0.12);
+        border: 1px solid var(--line);
       }
 
       .balls {
@@ -163,13 +208,13 @@
         background: linear-gradient(135deg, #4ade80, #16a34a);
       }
       .ball.bonus {
-        outline: 4px solid rgba(255, 255, 255, 0.22);
+        outline: 4px solid rgba(255, 255, 255, 0.3);
       }
 
       .plus {
         font-size: 1.8rem;
         font-weight: 800;
-        color: #e2e8f0;
+        color: var(--muted);
         opacity: 0.8;
         align-self: center;
         display: none;
@@ -224,15 +269,15 @@
       }
 
       .ghost {
-        background: rgba(255, 255, 255, 0.08);
-        color: white;
-        border: 1px solid rgba(255, 255, 255, 0.12);
+        background: var(--btn-ghost);
+        color: var(--text);
+        border: 1px solid var(--btn-ghost-border);
       }
 
       .danger {
-        background: rgba(239, 68, 68, 0.15);
-        color: #fecaca;
-        border: 1px solid rgba(239, 68, 68, 0.28);
+        background: rgba(239, 68, 68, 0.1);
+        color: var(--danger);
+        border: 1px solid rgba(239, 68, 68, 0.2);
       }
 
       .status {
@@ -251,8 +296,8 @@
       }
 
       .stat {
-        background: rgba(255, 255, 255, 0.06);
-        border: 1px solid rgba(255, 255, 255, 0.1);
+        background: var(--stat-bg);
+        border: 1px solid var(--stat-border);
         border-radius: 18px;
         padding: 16px;
       }
@@ -279,8 +324,8 @@
       .history-item {
         padding: 14px;
         border-radius: 16px;
-        background: rgba(255, 255, 255, 0.06);
-        border: 1px solid rgba(255, 255, 255, 0.1);
+        background: var(--stat-bg);
+        border: 1px solid var(--stat-border);
       }
 
       .history-head {
@@ -316,14 +361,14 @@
         color: var(--muted);
         text-align: center;
         padding: 28px 10px;
-        border: 1px dashed rgba(255, 255, 255, 0.18);
+        border: 1px dashed var(--line);
         border-radius: 16px;
       }
 
       .footer {
         text-align: center;
         color: var(--muted);
-        margin-top: 18px;
+        margin-top: 24px;
         font-size: 0.92rem;
       }
 
@@ -336,6 +381,13 @@
       @media (max-width: 600px) {
         body {
           padding: 16px;
+        }
+        .theme-toggle {
+          top: 12px;
+          right: 12px;
+        }
+        .hero {
+          margin-top: 50px;
         }
         .panel {
           padding: 18px;
@@ -353,9 +405,13 @@
         }
       }
     </style>
-  </head>
-  <body>
+    </head>
+    <body>
     <div class="wrap">
+      <div class="theme-toggle">
+        <button id="themeBtn">☀️ 라이트 모드</button>
+      </div>
+
       <div class="hero">
         <h1>🎱 로또 추첨 사이트</h1>
         <p>
@@ -410,6 +466,7 @@
 
     <script>
       const STORAGE_KEY = 'lotto_draw_history_v1'
+      const THEME_KEY = 'lotto_theme_v1'
       const ballsEl = document.getElementById('balls')
       const statusEl = document.getElementById('status')
       const historyListEl = document.getElementById('historyList')
@@ -420,8 +477,24 @@
       const quickBtn = document.getElementById('quickBtn')
       const copyBtn = document.getElementById('copyBtn')
       const resetBtn = document.getElementById('resetBtn')
+      const themeBtn = document.getElementById('themeBtn')
+
+      // Theme Management
+      let isLightMode = localStorage.getItem(THEME_KEY) === 'light'
+      if (isLightMode) {
+        document.body.classList.add('light-mode')
+        themeBtn.textContent = '🌙 다크 모드'
+      }
+
+      themeBtn.addEventListener('click', () => {
+        isLightMode = !isLightMode
+        document.body.classList.toggle('light-mode', isLightMode)
+        localStorage.setItem(THEME_KEY, isLightMode ? 'light' : 'dark')
+        themeBtn.textContent = isLightMode ? '🌙 다크 모드' : '☀️ 라이트 모드'
+      })
 
       let history = loadHistory()
+
       let latestDraw = history[0] || null
       let drawing = false
 
