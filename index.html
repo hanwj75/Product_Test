@@ -289,13 +289,14 @@
         <div class="controls">
           <button class="primary" id="rerollBtn">🔥 리롤 (Reroll)</button>
           <button class="ghost" id="copyBtn">📋 조합 복사</button>
+          <button class="ghost" id="toggleContactBtn">🤝 제휴 문의</button>
         </div>
         <p style="margin-top: 20px; color: var(--muted); font-size: 0.9rem;" id="statusMsg">
           리롤 버튼을 눌러 소환사의 협곡으로 떠나세요!
         </p>
       </div>
 
-      <section class="panel contact-section">
+      <section class="panel contact-section" id="contactPanel" style="display: none;">
         <div class="section-title">
           <h2>🤝 제휴 및 서비스 문의</h2>
         </div>
@@ -316,6 +317,32 @@
         </form>
       </section>
 
+      <!-- Disqus Comments -->
+      <section class="panel" style="text-align: left; margin-top: 24px;">
+        <div class="section-title">
+          <h2>💬 커뮤니티</h2>
+        </div>
+        <div id="disqus_thread"></div>
+        <script>
+            /**
+            *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+            *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+            /*
+            var disqus_config = function () {
+            this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+            this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+            };
+            */
+            (function() { // DON'T EDIT BELOW THIS LINE
+            var d = document, s = d.createElement('script');
+            s.src = 'https://producttest-1.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+      </section>
+
       <div class="footer">
         ✨ 리그 오브 레전드 챔피언 추천 서비스입니다.
       </div>
@@ -326,7 +353,19 @@
       const themeBtn = document.getElementById('themeBtn')
       const rerollBtn = document.getElementById('rerollBtn')
       const copyBtn = document.getElementById('copyBtn')
+      const toggleContactBtn = document.getElementById('toggleContactBtn')
+      const contactPanel = document.getElementById('contactPanel')
       const statusMsg = document.getElementById('statusMsg')
+
+      // Contact Form Toggle
+      toggleContactBtn.addEventListener('click', () => {
+        const isHidden = contactPanel.style.display === 'none'
+        contactPanel.style.display = isHidden ? 'block' : 'none'
+        toggleContactBtn.textContent = isHidden ? '❌ 문의 닫기' : '🤝 제휴 문의'
+        if (isHidden) {
+          contactPanel.scrollIntoView({ behavior: 'smooth' })
+        }
+      })
 
       const champions = {
         TOP: ['가렌', '다리우스', '잭스', '피오라', '카밀', '레넥톤', '아트록스', '오른', '말파이트', '제이스', '갱플랭크', '나르', '퀸', '티모'],
