@@ -459,10 +459,71 @@
         </aside>
       </div>
 
+      <section class="panel contact-section">
+        <div class="section-title">
+          <h2>🤝 제휴 및 서비스 문의</h2>
+        </div>
+        <form action="https://formspree.io/f/mdapaqyw" method="POST" class="contact-form">
+          <div class="form-group">
+            <label for="name">성함/기업명</label>
+            <input type="text" id="name" name="name" placeholder="성함 또는 기업명을 입력해주세요" required>
+          </div>
+          <div class="form-group">
+            <label for="email">이메일 주소</label>
+            <input type="email" id="email" name="_replyto" placeholder="답변받으실 이메일을 입력해주세요" required>
+          </div>
+          <div class="form-group">
+            <label for="message">문의 내용</label>
+            <textarea id="message" name="message" rows="4" placeholder="문의하실 내용을 상세히 적어주세요" required></textarea>
+          </div>
+          <button type="submit" class="primary full-width">문의 보내기</button>
+        </form>
+      </section>
+
       <div class="footer">
         ✨ 단일 HTML 파일로 동작하며 별도 설치가 필요 없습니다.
       </div>
     </div>
+
+    <style>
+      /* 기존 스타일에 추가 */
+      .contact-section {
+        margin-top: 20px;
+        max-width: 100%;
+      }
+      .contact-form {
+        display: grid;
+        gap: 16px;
+      }
+      .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .form-group label {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: var(--muted);
+      }
+      .form-group input, .form-group textarea {
+        background: var(--stat-bg);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 12px 16px;
+        color: var(--text);
+        font-family: inherit;
+        font-size: 0.95rem;
+        transition: border-color 0.2s ease;
+      }
+      .form-group input:focus, .form-group textarea:focus {
+        outline: none;
+        border-color: var(--accent2);
+      }
+      .full-width {
+        width: 100%;
+        margin-top: 8px;
+      }
+    </style>
 
     <script>
       const STORAGE_KEY = 'lotto_draw_history_v1'
