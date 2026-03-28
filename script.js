@@ -214,39 +214,47 @@ async function predict(inputElement) {
   
   const prediction = await model.predict(inputElement)
   
+  // Teachable Machine의 클래스 이름이 다를 수 있으므로 인덱스로 접근하거나 소문자로 비교
   let maleScore = 0
   let femaleScore = 0
 
   prediction.forEach(p => {
-    if (p.className === '남자 챔피언') maleScore = p.probability
-    if (p.className === '여자 챔피언') femaleScore = p.probability
+    // 클래스명에서 '남' 또는 'male'이 포함되면 남성으로 판단
+    if (p.className.includes('남') || p.className.toLowerCase().includes('male')) {
+      maleScore = p.probability
+    } 
+    // 클래스명에서 '여' 또는 'female'이 포함되면 여성으로 판단
+    else if (p.className.includes('여') || p.className.toLowerCase().includes('female')) {
+      femaleScore = p.probability
+    }
   })
 
   const mValue = Math.round(maleScore * 100)
   const fValue = Math.round(femaleScore * 100)
 
-  // 더 높은 확률 쪽만 표시
+  // 더 높은 확률 쪽 선택
   if (mValue > fValue) {
-    const randomChamp = champData.male[Math.floor(Math.random() * champData.male.length)]
+    // 결과가 이미 표시 중이고 웹캠 모드라면 챔피언 이미지가 너무 자주 바뀌지 않도록 처리
+    if (!isWebcamActive || champImg.src.includes('placeholder') || champImg.src === '') {
+       const randomChamp = champData.male[Math.floor(Math.random() * champData.male.length)]
+       champImg.src = randomChamp.img
+       resultLabel.textContent = `당신은 "${randomChamp.name}" 상!`
+       resultMessage.textContent = randomChamp.msg
+    }
     similarityPercent.textContent = mValue
-    resultLabel.textContent = `당신은 "${randomChamp.name}" 상!`
-    resultMessage.textContent = randomChamp.msg
-    champImg.src = randomChamp.img
-    
-    // 바 스타일 업데이트 (남성 상 블루 계열)
     singleResultBar.className = 'result-bar bar-male'
-    singleResultBar.style.width = mValue + '%'
+    singleResultBar.style.width = Math.max(mValue, 5) + '%' // 최소 5%는 보이게
     singleResultBar.textContent = `남챔 상 ${mValue}% 일치`
   } else {
-    const randomChamp = champData.female[Math.floor(Math.random() * champData.female.length)]
+    if (!isWebcamActive || champImg.src.includes('placeholder') || champImg.src === '') {
+       const randomChamp = champData.female[Math.floor(Math.random() * champData.female.length)]
+       champImg.src = randomChamp.img
+       resultLabel.textContent = `당신은 "${randomChamp.name}" 상!`
+       resultMessage.textContent = randomChamp.msg
+    }
     similarityPercent.textContent = fValue
-    resultLabel.textContent = `당신은 "${randomChamp.name}" 상!`
-    resultMessage.textContent = randomChamp.msg
-    champImg.src = randomChamp.img
-    
-    // 바 스타일 업데이트 (여성 상 핑크 계열)
     singleResultBar.className = 'result-bar bar-female'
-    singleResultBar.style.width = fValue + '%'
+    singleResultBar.style.width = Math.max(fValue, 5) + '%'
     singleResultBar.textContent = `여챔 상 ${fValue}% 일치`
   }
 }
@@ -258,6 +266,7 @@ retryBtn.addEventListener('click', () => {
   resultContainer.style.display = 'none'
   uploadArea.style.display = 'flex'
   imageUpload.value = ''
+  champImg.src = '' // 이미지 초기화
   uploadTabBtn.classList.remove('primary')
   startWebcamBtn.classList.remove('primary')
 })
