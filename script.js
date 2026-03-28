@@ -22,10 +22,7 @@ const loadingSpinner = document.getElementById('loadingSpinner')
 const resultContainer = document.getElementById('resultContainer')
 const resultLabel = document.getElementById('resultLabel')
 const resultMessage = document.getElementById('resultMessage')
-const maleBar = document.getElementById('maleBar')
-const femaleBar = document.getElementById('femaleBar')
-const malePercent = document.getElementById('malePercent')
-const femalePercent = document.getElementById('femalePercent')
+const singleResultBar = document.getElementById('singleResultBar')
 const similarityPercent = document.getElementById('similarityPercent')
 const champImg = document.getElementById('champImg')
 const retryBtn = document.getElementById('retryBtn')
@@ -228,24 +225,29 @@ async function predict(inputElement) {
   const mValue = Math.round(maleScore * 100)
   const fValue = Math.round(femaleScore * 100)
 
-  malePercent.textContent = mValue
-  femalePercent.textContent = fValue
-  maleBar.style.width = mValue + '%'
-  femaleBar.style.width = fValue + '%'
-
-  // 결과 매칭 로직
+  // 더 높은 확률 쪽만 표시
   if (mValue > fValue) {
     const randomChamp = champData.male[Math.floor(Math.random() * champData.male.length)]
     similarityPercent.textContent = mValue
     resultLabel.textContent = `당신은 "${randomChamp.name}" 상!`
     resultMessage.textContent = randomChamp.msg
     champImg.src = randomChamp.img
+    
+    // 바 스타일 업데이트 (남성 상 블루 계열)
+    singleResultBar.className = 'result-bar bar-male'
+    singleResultBar.style.width = mValue + '%'
+    singleResultBar.textContent = `남챔 상 ${mValue}% 일치`
   } else {
     const randomChamp = champData.female[Math.floor(Math.random() * champData.female.length)]
     similarityPercent.textContent = fValue
     resultLabel.textContent = `당신은 "${randomChamp.name}" 상!`
     resultMessage.textContent = randomChamp.msg
     champImg.src = randomChamp.img
+    
+    // 바 스타일 업데이트 (여성 상 핑크 계열)
+    singleResultBar.className = 'result-bar bar-female'
+    singleResultBar.style.width = fValue + '%'
+    singleResultBar.textContent = `여챔 상 ${fValue}% 일치`
   }
 }
 

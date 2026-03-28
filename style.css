@@ -116,10 +116,10 @@ body {
 
 .result-container {
   margin-top: 24px;
-  padding: 24px;
-  border-radius: 24px;
+  padding: 30px;
+  border-radius: 30px;
   background: var(--card);
-  border: 1px solid var(--line);
+  border: 2px solid var(--line);
   display: none;
 }
 
@@ -127,53 +127,60 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 20px;
+  gap: 24px;
   margin-bottom: 24px;
 }
 
 .champ-result-img {
-  width: 180px;
-  height: 180px;
+  width: 220px;
+  height: 220px;
   border-radius: 50%;
-  border: 4px solid var(--accent);
+  border: 6px solid var(--accent);
   object-fit: cover;
-  box-shadow: 0 0 20px rgba(194, 144, 45, 0.4);
+  box-shadow: 0 0 30px rgba(194, 144, 45, 0.4);
 }
 
 .result-title {
-  font-size: 1.8rem;
+  font-size: 2rem;
   font-weight: 800;
   color: var(--accent);
-  margin: 0;
+  margin: 10px 0;
 }
 
 .similarity-badge {
-  background: var(--accent);
+  background: linear-gradient(135deg, var(--accent), #8a661b);
   color: white;
-  padding: 6px 14px;
+  padding: 10px 24px;
   border-radius: 999px;
-  font-size: 1.1rem;
-  font-weight: 800;
-  margin-top: 8px;
+  font-size: 1.4rem;
+  font-weight: 900;
+  margin-top: 10px;
+  box-shadow: 0 5px 15px rgba(194, 144, 45, 0.3);
 }
 
 .result-bar-container {
-  height: 28px;
+  height: 32px;
   background: var(--bg1);
-  border-radius: 14px;
+  border-radius: 16px;
   overflow: hidden;
-  margin: 15px 0;
+  margin: 25px 0 10px;
   display: flex;
   border: 1px solid var(--line);
 }
 
 .result-bar {
   height: 100%;
-  transition: width 0.5s ease;
+  transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  color: white;
+  font-size: 0.9rem;
 }
 
-.bar-male { background: var(--accent2); }
-.bar-female { background: #ec4899; }
+.bar-male { background: linear-gradient(90deg, #006680, #38bdf8); }
+.bar-female { background: linear-gradient(90deg, #ec4899, #f472b6); }
 
 .loading-spinner {
   display: none;

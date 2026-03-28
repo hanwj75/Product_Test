@@ -50,22 +50,16 @@
         <div class="result-container" id="resultContainer">
           <div class="result-header">
             <img id="champImg" class="champ-result-img" src="" alt="챔피언 이미지">
-            <div>
-              <div class="result-title" id="resultLabel">분석 완료</div>
-              <div class="similarity-badge"><span id="similarityPercent">0</span>% 닮음</div>
-            </div>
+            <div class="result-title" id="resultLabel">분석 완료</div>
+            <div class="similarity-badge"><span id="similarityPercent">0</span>% 일치</div>
           </div>
           
-          <p id="resultMessage" style="color: var(--muted); margin-bottom: 20px; font-size: 1.1rem;"></p>
+          <p id="resultMessage" style="color: var(--muted); margin-bottom: 10px; font-size: 1.1rem;"></p>
           
           <div class="result-bar-container">
-            <div class="result-bar bar-male" id="maleBar"></div>
-            <div class="result-bar bar-female" id="femaleBar"></div>
+            <div class="result-bar" id="singleResultBar"></div>
           </div>
-          <div style="display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--muted);">
-            <span>남챔 상 (<span id="malePercent">0</span>%)</span>
-            <span>여챔 상 (<span id="femalePercent">0</span>%)</span>
-          </div>
+          
           <button class="ghost" style="margin-top: 24px; width: 100%;" id="retryBtn">🔄 초기화</button>
         </div>
       </section>
