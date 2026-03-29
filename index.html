@@ -4,11 +4,21 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>롤 챔피언 추천기 & AI 챔피언 상 테스트 | LoL 인벤토리</title>
-    <meta name="description" content="오늘의 롤 챔피언을 추천받고 AI 얼굴 분석으로 나와 닮은 챔피언을 찾아보세요. 전 라인 챔피언 분석 및 최신 메타 반영.">
-    <meta name="keywords" content="롤, 챔피언추천, AI얼굴테스트, 롤챔피언상, 리그오브레전드, 롤조합">
-    <meta name="google-adsense-account" content="ca-pub-9684958256850456">
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9684958256850456" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="style.css">
+    <meta
+      name="description"
+      content="오늘의 롤 챔피언을 추천받고 AI 얼굴 분석으로 나와 닮은 챔피언을 찾아보세요. 전 라인 챔피언 분석 및 최신 메타 반영."
+    />
+    <meta
+      name="keywords"
+      content="롤, 챔피언추천, AI얼굴테스트, 롤챔피언상, 리그오브레전드, 롤조합"
+    />
+    <meta name="google-adsense-account" content="ca-pub-9684958256850456" />
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9684958256850456"
+      crossorigin="anonymous"
+    ></script>
+    <link rel="stylesheet" href="style.css" />
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js"></script>
   </head>
@@ -21,19 +31,30 @@
     <main class="wrap">
       <section class="hero">
         <h1>⚔️ LoL Champion Picker</h1>
-        <p>오늘 뭐 할지 고민인가요? AI 기술과 최신 데이터를 활용해 당신의 플레이를 완성하세요.</p>
+        <p>
+          오늘 뭐 할지 고민인가요? AI 기술과 최신 데이터를 활용해 당신의
+          플레이를 완성하세요.
+        </p>
       </section>
 
       <!-- AI Face Test Section -->
-      <article class="panel face-test-section" id="faceTestPanel" style="display: none;">
+      <article
+        class="panel face-test-section"
+        id="faceTestPanel"
+        style="display: none"
+      >
         <div class="section-title">
           <h2>🎭 AI 챔피언 상 분석</h2>
         </div>
         <div class="rich-text">
-          <p>구글 Teachable Machine AI를 활용한 딥러닝 분석 기술입니다. 수천 장의 챔피언 데이터를 학습한 AI가 당신의 이목구비와 분위기를 분석하여 가장 높은 일치율을 보이는 챔피언을 매칭합니다.</p>
+          <p>
+            구글 Teachable Machine AI를 활용한 딥러닝 분석 기술입니다. 수천 장의
+            챔피언 데이터를 학습한 AI가 당신의 이목구비와 분위기를 분석하여 가장
+            높은 일치율을 보이는 챔피언을 매칭합니다.
+          </p>
         </div>
-        
-        <div class="controls" style="margin: 20px 0;">
+
+        <div class="controls" style="margin: 20px 0">
           <button class="ghost" id="startWebcamBtn">📹 웹캠 시작</button>
           <button class="ghost" id="uploadTabBtn">🖼️ 이미지 업로드</button>
         </div>
@@ -41,53 +62,99 @@
         <div id="webcam-container"></div>
         <div class="upload-area" id="uploadArea">
           <div id="uploadPrompt">
-            <span style="font-size: 3rem;">📸</span>
+            <span style="font-size: 3rem">📸</span>
             <p>클릭하거나 이미지를 드래그하여 업로드하세요</p>
           </div>
-          <img id="previewImg" src="#" alt="미리보기">
-          <input type="file" id="imageUpload" accept="image/*" style="display: none;">
+          <img id="previewImg" src="#" alt="미리보기" />
+          <input
+            type="file"
+            id="imageUpload"
+            accept="image/*"
+            style="display: none"
+          />
         </div>
 
         <div class="loading-spinner" id="loadingSpinner"></div>
 
         <div class="result-container" id="resultContainer">
           <div class="result-header">
-            <img id="champImg" class="champ-result-img" src="" alt="챔피언 이미지">
+            <img
+              id="champImg"
+              class="champ-result-img"
+              src=""
+              alt="챔피언 이미지"
+            />
             <div class="result-title" id="resultLabel">분석 완료</div>
-            <div class="similarity-badge"><span id="similarityPercent">0</span>% 일치</div>
+            <div class="similarity-badge">
+              <span id="similarityPercent">0</span>% 일치
+            </div>
           </div>
-          <p id="resultMessage" style="color: var(--muted); margin-bottom: 10px; font-size: 1.1rem;"></p>
+          <p
+            id="resultMessage"
+            style="color: var(--muted); margin-bottom: 10px; font-size: 1.1rem"
+          ></p>
           <div class="result-bar-container">
             <div class="result-bar" id="singleResultBar"></div>
           </div>
-          <button class="ghost" style="margin-top: 24px; width: 100%;" id="retryBtn">🔄 초기화</button>
+          <button
+            class="ghost"
+            style="margin-top: 24px; width: 100%"
+            id="retryBtn"
+          >
+            🔄 초기화
+          </button>
         </div>
       </article>
 
       <!-- Tool Section -->
       <section class="lane-grid">
         <div class="lane-card">
-          <img src="https://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/Garen.png" class="lane-champ-img" id="topImg" alt="TOP">
+          <img
+            src="https://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/Garen.png"
+            class="lane-champ-img"
+            id="topImg"
+            alt="TOP"
+          />
           <span class="lane-name">TOP</span>
           <div class="champ-name" id="topChamp">?</div>
         </div>
         <div class="lane-card">
-          <img src="https://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/LeeSin.png" class="lane-champ-img" id="jungleImg" alt="JUNGLE">
+          <img
+            src="https://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/LeeSin.png"
+            class="lane-champ-img"
+            id="jungleImg"
+            alt="JUNGLE"
+          />
           <span class="lane-name">JUNGLE</span>
           <div class="champ-name" id="jungleChamp">?</div>
         </div>
         <div class="lane-card">
-          <img src="https://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/Ahri.png" class="lane-champ-img" id="midImg" alt="MID">
+          <img
+            src="https://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/Ahri.png"
+            class="lane-champ-img"
+            id="midImg"
+            alt="MID"
+          />
           <span class="lane-name">MID</span>
           <div class="champ-name" id="midChamp">?</div>
         </div>
         <div class="lane-card">
-          <img src="https://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/Ezreal.png" class="lane-champ-img" id="adcImg" alt="ADC">
+          <img
+            src="https://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/Ezreal.png"
+            class="lane-champ-img"
+            id="adcImg"
+            alt="ADC"
+          />
           <span class="lane-name">ADC</span>
           <div class="champ-name" id="adcChamp">?</div>
         </div>
         <div class="lane-card">
-          <img src="https://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/Thresh.png" class="lane-champ-img" id="supportImg" alt="SUPPORT">
+          <img
+            src="https://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/Thresh.png"
+            class="lane-champ-img"
+            id="supportImg"
+            alt="SUPPORT"
+          />
           <span class="lane-name">SUPPORT</span>
           <div class="champ-name" id="supportChamp">?</div>
         </div>
@@ -100,7 +167,10 @@
           <button class="ghost" id="toggleContactBtn">🤝 제휴 문의</button>
           <button class="ghost" id="toggleCommunityBtn">💬 커뮤니티</button>
         </div>
-        <p style="margin-top: 20px; color: var(--muted); font-size: 0.9rem;" id="statusMsg">
+        <p
+          style="margin-top: 20px; color: var(--muted); font-size: 0.9rem"
+          id="statusMsg"
+        >
           최신 OP.GG 데이터를 기반으로 5개 라인 최적의 조합을 추천합니다.
         </p>
       </section>
@@ -108,73 +178,161 @@
       <!-- 에드센스 승인을 위한 고품질 텍스트 섹션 -->
       <article class="panel rich-text-section">
         <h2>왜 롤 챔피언 선택이 중요한가요?</h2>
-        <p>리그 오브 레전드(League of Legends)는 단순한 실력 게임을 넘어 <strong>밴픽 전략</strong>이 승패의 50% 이상을 결정하는 전략 게임입니다. 특히 솔로 랭크에서는 팀원과의 상성과 상대 라인 챔피언에 대한 카운터 픽이 매우 중요합니다. 본 서비스는 무작위 추천뿐만 아니라 사용자가 새로운 챔피언을 시도해볼 수 있는 동기를 부여합니다.</p>
-        
+        <p>
+          리그 오브 레전드(League of Legends)는 단순한 실력 게임을 넘어
+          <strong>밴픽 전략</strong>이 승패의 50% 이상을 결정하는 전략
+          게임입니다. 특히 솔로 랭크에서는 팀원과의 상성과 상대 라인 챔피언에
+          대한 카운터 픽이 매우 중요합니다. 본 서비스는 무작위 추천뿐만 아니라
+          사용자가 새로운 챔피언을 시도해볼 수 있는 동기를 부여합니다.
+        </p>
+
         <h3>AI 기술로 찾는 나의 롤 캐릭터</h3>
-        <p>최근 인공지능 기술은 게임 분야에서도 활발히 사용되고 있습니다. 저희 사이트에서 제공하는 'AI 챔피언 상 테스트'는 단순한 재미를 넘어, 사용자의 얼굴형과 인상을 분석하여 게임 내 캐릭터들과의 시각적 유사성을 찾아냅니다. 이는 게이머들에게 색다른 몰입감을 선사하며, 자신과 닮은 챔피언에 대한 애착을 갖게 합니다.</p>
-        
+        <p>
+          최근 인공지능 기술은 게임 분야에서도 활발히 사용되고 있습니다. 저희
+          사이트에서 제공하는 'AI 챔피언 상 테스트'는 단순한 재미를 넘어,
+          사용자의 얼굴형과 인상을 분석하여 게임 내 캐릭터들과의 시각적 유사성을
+          찾아냅니다. 이는 게이머들에게 색다른 몰입감을 선사하며, 자신과 닮은
+          챔피언에 대한 애착을 갖게 합니다.
+        </p>
+
         <h3>승리를 위한 라인별 팁</h3>
         <ul>
-          <li><strong>TOP</strong>: 라인 유지력과 텔레포트 타이밍이 핵심입니다.</li>
-          <li><strong>JUNGLE</strong>: 시야 장악과 오브젝트 컨트롤을 우선시하세요.</li>
-          <li><strong>MID</strong>: 빠른 로밍으로 다른 라인에 영향력을 끼쳐야 합니다.</li>
-          <li><strong>ADC</strong>: 후반 캐리를 위해 안정적인 CS 수급이 최우선입니다.</li>
-          <li><strong>SUPPORT</strong>: 원딜 보호와 맵 리딩으로 팀의 등불이 되어주세요.</li>
+          <li>
+            <strong>TOP</strong>: 라인 유지력과 텔레포트 타이밍이 핵심입니다.
+          </li>
+          <li>
+            <strong>JUNGLE</strong>: 시야 장악과 오브젝트 컨트롤을 우선시하세요.
+          </li>
+          <li>
+            <strong>MID</strong>: 빠른 로밍으로 다른 라인에 영향력을 끼쳐야
+            합니다.
+          </li>
+          <li>
+            <strong>ADC</strong>: 후반 캐리를 위해 안정적인 CS 수급이
+            최우선입니다.
+          </li>
+          <li>
+            <strong>SUPPORT</strong>: 원딜 보호와 맵 리딩으로 팀의 등불이
+            되어주세요.
+          </li>
         </ul>
       </article>
 
       <!-- Mandatory Panels -->
-      <section class="panel contact-section" id="contactPanel" style="display: none;">
+      <section
+        class="panel contact-section"
+        id="contactPanel"
+        style="display: none"
+      >
         <div class="section-title"><h2>🤝 제휴 및 서비스 문의</h2></div>
-        <form action="https://formspree.io/f/mdapaqyw" method="POST" class="contact-form">
+        <form
+          action="https://formspree.io/f/mdapaqyw"
+          method="POST"
+          class="contact-form"
+        >
           <div class="form-group">
             <label for="name">성함/기업명</label>
-            <input type="text" id="name" name="name" placeholder="성함 또는 기업명을 입력해주세요" required>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              placeholder="성함 또는 기업명을 입력해주세요"
+              required
+            />
           </div>
           <div class="form-group">
             <label for="email">이메일 주소</label>
-            <input type="email" id="email" name="_replyto" placeholder="답변받으실 이메일을 입력해주세요" required>
+            <input
+              type="email"
+              id="email"
+              name="_replyto"
+              placeholder="답변받으실 이메일을 입력해주세요"
+              required
+            />
           </div>
           <div class="form-group">
             <label for="message">문의 내용</label>
-            <textarea id="message" name="message" rows="4" placeholder="문의하실 내용을 상세히 적어주세요" required></textarea>
+            <textarea
+              id="message"
+              name="message"
+              rows="4"
+              placeholder="문의하실 내용을 상세히 적어주세요"
+              required
+            ></textarea>
           </div>
-          <button type="submit" class="primary" style="width: 100%">문의 보내기</button>
+          <button type="submit" class="primary" style="width: 100%">
+            문의 보내기
+          </button>
         </form>
       </section>
 
-      <section class="panel" id="communityPanel" style="text-align: left; margin-top: 24px; display: none;">
+      <section
+        class="panel"
+        id="communityPanel"
+        style="text-align: left; margin-top: 24px; display: none"
+      >
         <div class="section-title"><h2>💬 커뮤니티</h2></div>
         <div id="disqus_thread"></div>
         <script>
-            (function() {
-            var d = document, s = d.createElement('script');
-            s.src = 'https://producttest-1.disqus.com/embed.js';
-            s.setAttribute('data-timestamp', +new Date());
-            (d.head || d.body).appendChild(s);
-            })();
+          ;(function () {
+            var d = document,
+              s = d.createElement('script')
+            s.src = 'https://producttest-1.disqus.com/embed.js'
+            s.setAttribute('data-timestamp', +new Date())
+            ;(d.head || d.body).appendChild(s)
+          })()
         </script>
       </section>
 
       <!-- Footer with Mandatory Links -->
       <footer class="footer">
         <div class="footer-links">
-          <button onclick="alert('본 사이트는 리그 오브 레전드 데이터를 활용한 팬 서비스입니다.')">서비스 소개</button> |
-          <button onclick="showPrivacy()">개인정보처리방침</button> |
-          <button onclick="alert('이용약관: 본 서비스를 이용함에 있어 발생하는 데이터 이용에 동의합니다.')">이용약관</button>
+          <button
+            onclick="
+              alert(
+                '본 사이트는 리그 오브 레전드 데이터를 활용한 팬 서비스입니다.',
+              )
+            "
+          >
+            서비스 소개
+          </button>
+          | <button onclick="showPrivacy()">개인정보처리방침</button> |
+          <button
+            onclick="
+              alert(
+                '이용약관: 본 서비스를 이용함에 있어 발생하는 데이터 이용에 동의합니다.',
+              )
+            "
+          >
+            이용약관
+          </button>
         </div>
-        <p class="disclaimer">LoL Champion Picker isn't endorsed by Riot Games and doesn't reflect the views or opinions of Riot Games or anyone officially involved in producing or managing League of Legends.</p>
+        <p class="disclaimer">
+          LoL Champion Picker isn't endorsed by Riot Games and doesn't reflect
+          the views or opinions of Riot Games or anyone officially involved in
+          producing or managing League of Legends.
+        </p>
         <p>© 2026 LoL Inventory. All Rights Reserved.</p>
       </footer>
     </main>
 
-    <div id="privacyModal" class="modal" style="display: none;">
+    <div id="privacyModal" class="modal" style="display: none">
       <div class="modal-content panel">
         <h2>개인정보처리방침</h2>
         <div class="scroll-area">
-          <p>1. 수집하는 개인정보 항목: 본 사이트는 별도의 회원가입 없이 이용 가능하며, AI 테스트 시 업로드된 이미지는 서버에 저장되지 않고 브라우저 내에서 즉시 처리 후 파기됩니다.</p>
-          <p>2. 광고 게재: 본 사이트는 Google AdSense 광고를 게재하며, 사용자의 관심사에 맞는 광고를 제공하기 위해 쿠키를 사용할 수 있습니다.</p>
-          <p>3. 쿠키 사용: 사용자는 브라우저 설정에서 쿠키 수집을 거부할 수 있습니다.</p>
+          <p>
+            1. 수집하는 개인정보 항목: 본 사이트는 별도의 회원가입 없이 이용
+            가능하며, AI 테스트 시 업로드된 이미지는 서버에 저장되지 않고
+            브라우저 내에서 즉시 처리 후 파기됩니다.
+          </p>
+          <p>
+            2. 광고 게재: 본 사이트는 Google AdSense 광고를 게재하며, 사용자의
+            관심사에 맞는 광고를 제공하기 위해 쿠키를 사용할 수 있습니다.
+          </p>
+          <p>
+            3. 쿠키 사용: 사용자는 브라우저 설정에서 쿠키 수집을 거부할 수
+            있습니다.
+          </p>
         </div>
         <button class="primary" onclick="hidePrivacy()">닫기</button>
       </div>
@@ -183,8 +341,12 @@
     <script src="script.js"></script>
     <!-- Build Trigger: 2026-03-29 -->
     <script>
-      function showPrivacy() { document.getElementById('privacyModal').style.display = 'flex'; }
-      function hidePrivacy() { document.getElementById('privacyModal').style.display = 'none'; }
+      function showPrivacy() {
+        document.getElementById('privacyModal').style.display = 'flex'
+      }
+      function hidePrivacy() {
+        document.getElementById('privacyModal').style.display = 'none'
+      }
     </script>
   </body>
 </html>
