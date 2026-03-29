@@ -123,12 +123,91 @@ body {
 .rich-text-section p { margin-bottom: 15px; color: var(--muted); font-size: 1.05rem; }
 .rich-text-section ul { padding-left: 20px; color: var(--muted); }
 .rich-text-section li { margin-bottom: 10px; }
+.section-title {
+  margin-bottom: 20px;
+}
+
+.section-title h2 {
+  margin: 0;
+  color: var(--accent);
+}
 
 .controls { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; }
 
 button { border: 0; cursor: pointer; border-radius: 14px; padding: 16px 32px; font-size: 1.1rem; font-weight: 700; transition: all 0.2s ease; }
 .primary { background: linear-gradient(135deg, var(--accent), #8a661b); color: white; box-shadow: 0 10px 24px rgba(194, 144, 45, 0.3); }
 .ghost { background: var(--btn-ghost); color: var(--text); border: 1px solid var(--btn-ghost-border); }
+
+.contact-form {
+  display: grid;
+  gap: 18px;
+}
+
+.contact-section > .contact-form:first-of-type {
+  display: none;
+}
+
+.contact-form.contact-form-restored {
+  display: grid;
+}
+
+.form-group {
+  display: grid;
+  gap: 8px;
+}
+
+.form-group label {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--stat-bg);
+  color: var(--text);
+  font: inherit;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+  color: var(--muted);
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 140px;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(194, 144, 45, 0.18);
+}
+
+#disqus_thread {
+  color: var(--text);
+  background: var(--stat-bg);
+  border: 1px solid transparent;
+  border-radius: 18px;
+  padding: 16px;
+}
+
+#disqus_thread a {
+  color: var(--accent);
+}
+
+body.light-mode #disqus_thread {
+  color: #000000;
+  border-color: #000000;
+  background: #ffffff;
+}
 
 .footer { text-align: center; margin-top: 60px; padding: 40px 0; border-top: 1px solid var(--line); color: var(--muted); }
 .footer-links button { background: none; color: var(--accent); font-size: 0.9rem; padding: 5px 10px; font-weight: normal; }
@@ -155,4 +234,5 @@ button { border: 0; cursor: pointer; border-radius: 14px; padding: 16px 32px; fo
   .hero { margin-top: 80px; }
   .lane-grid { grid-template-columns: 1fr 1fr; }
   .panel { padding: 20px; }
+  #disqus_thread { padding: 12px; }
 }

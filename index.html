@@ -266,6 +266,48 @@
         </form>
       </section>
 
+      <form
+        action="https://formspree.io/f/mdapaqyw"
+        method="POST"
+        class="panel contact-form contact-form-restored"
+        id="contactPanelRestored"
+        style="display: none"
+      >
+        <div class="form-group">
+          <label for="contactName">성함/기업명</label>
+          <input
+            type="text"
+            id="contactName"
+            name="name"
+            placeholder="성함 또는 기업명을 입력해주세요"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="contactEmail">이메일 주소</label>
+          <input
+            type="email"
+            id="contactEmail"
+            name="_replyto"
+            placeholder="답변받으실 이메일을 입력해주세요"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="contactMessage">문의 내용</label>
+          <textarea
+            id="contactMessage"
+            name="message"
+            rows="4"
+            placeholder="문의하실 내용을 상세히 적어주세요"
+            required
+          ></textarea>
+        </div>
+        <button type="submit" class="primary" style="width: 100%">
+          문의 보내기
+        </button>
+      </form>
+
       <section
         class="panel"
         id="communityPanel"

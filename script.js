@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const faceTestBtn = document.getElementById('faceTestBtn')
 
   const contactPanel = document.getElementById('contactPanel')
+  const contactPanelRestored = document.getElementById('contactPanelRestored')
   const communityPanel = document.getElementById('communityPanel')
   const faceTestPanel = document.getElementById('faceTestPanel')
   const statusMsg = document.getElementById('statusMsg')
@@ -414,8 +415,35 @@ document.addEventListener('DOMContentLoaded', () => {
     themeBtn.textContent = isLightMode ? '🌙 다크 모드' : '☀️ 라이트 모드'
   })
 
+  themeBtn.addEventListener('click', refreshCommunityTheme)
+
+  function refreshCommunityTheme() {
+    const disqusThread = document.getElementById('disqus_thread')
+    if (!disqusThread) return
+
+    disqusThread.dataset.theme = isLightMode ? 'light' : 'dark'
+    disqusThread.style.color = isLightMode ? '#000000' : ''
+    disqusThread.style.borderColor = isLightMode ? '#000000' : ''
+
+    if (
+      communityPanel.style.display === 'block' &&
+      window.DISQUS &&
+      typeof window.DISQUS.reset === 'function'
+    ) {
+      window.DISQUS.reset({
+        reload: true,
+        config: function () {
+          this.page.url = window.location.href.split('#')[0]
+          this.page.identifier = window.location.pathname || '/'
+          this.page.title = document.title
+        },
+      })
+    }
+  }
+
   function hideAllPanels() {
     contactPanel.style.display = 'none'
+    if (contactPanelRestored) contactPanelRestored.style.display = 'none'
     communityPanel.style.display = 'none'
     faceTestPanel.style.display = 'none'
     toggleContactBtn.textContent = '🤝 제휴 문의'
@@ -441,6 +469,18 @@ document.addEventListener('DOMContentLoaded', () => {
       communityPanel.style.display = 'block'
       toggleCommunityBtn.textContent = '❌ 커뮤니티 닫기'
       communityPanel.scrollIntoView({ behavior: 'smooth' })
+    }
+  })
+
+  toggleContactBtn.addEventListener('click', () => {
+    if (contactPanel.style.display === 'block' && contactPanelRestored) {
+      contactPanelRestored.style.display = 'grid'
+    }
+  })
+
+  toggleCommunityBtn.addEventListener('click', () => {
+    if (communityPanel.style.display === 'block') {
+      refreshCommunityTheme()
     }
   })
 
