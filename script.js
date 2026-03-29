@@ -191,7 +191,7 @@ document.addEventListener('DOMContentLoaded', () => {
     피즈: 'Fizz',
     하이머딩거: 'Heimerdinger',
     헤카림: 'Hecarim',
-    크산테: 'Ksante',
+    크산테: 'KSante',
     브라이어: 'Briar',
     나피리: 'Naafiri',
     흐웨이: 'Hwei',
@@ -309,7 +309,7 @@ document.addEventListener('DOMContentLoaded', () => {
       { name: '피즈', id: 'Fizz' },
       { name: '하이머딩거', id: 'Heimerdinger' },
       { name: '헤카림', id: 'Hecarim' },
-      { name: '크산테', id: 'Ksante' },
+      { name: '크산테', id: 'KSante' },
       { name: '흐웨이', id: 'Hwei' },
       { name: '스몰더', id: 'Smolder' },
       { name: '아펠리오스', id: 'Aphelios' },
@@ -399,6 +399,14 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!id)
       return 'https://ddragon.leagueoflegends.com/cdn/16.6.1/img/champion/Garen.png'
     return `https://ddragon.leagueoflegends.com/cdn/16.6.1/img/champion/${id}.png`
+  }
+
+  function pickUniqueChampion(list, usedNames) {
+    const available = list.filter((name) => !usedNames.has(name))
+    const pool = available.length > 0 ? available : list
+    const selected = pool[Math.floor(Math.random() * pool.length)]
+    usedNames.add(selected)
+    return selected
   }
 
   // Theme Management
@@ -933,26 +941,28 @@ document.addEventListener('DOMContentLoaded', () => {
     statusMsg.textContent = '운명의 챔피언을 찾는 중...'
     const lanes = ['top', 'jungle', 'mid', 'adc', 'support']
     for (let i = 0; i < 15; i++) {
+      const rollingUsedNames = new Set()
       lanes.forEach((lane) => {
         const el = document.getElementById(`${lane}Champ`)
         const imgEl = document.getElementById(`${lane}Img`)
         const list = champions[lane.toUpperCase()]
-        const randomName = list[Math.floor(Math.random() * list.length)]
+        const randomName = pickUniqueChampion(list, rollingUsedNames)
         const champId = champMapping[randomName]
         el.textContent = randomName
-        if (champId) imgEl.src = getChampImg(champId)
+        imgEl.src = getChampImg(champId)
         el.classList.add('rolling')
       })
       await new Promise((r) => setTimeout(r, 70))
     }
+    const finalUsedNames = new Set()
     lanes.forEach((lane) => {
       const el = document.getElementById(`${lane}Champ`)
       const imgEl = document.getElementById(`${lane}Img`)
       const list = champions[lane.toUpperCase()]
-      const finalName = list[Math.floor(Math.random() * list.length)]
+      const finalName = pickUniqueChampion(list, finalUsedNames)
       const finalId = champMapping[finalName]
       el.textContent = finalName
-      if (finalId) imgEl.src = getChampImg(finalId)
+      imgEl.src = getChampImg(finalId)
       el.classList.remove('rolling')
     })
     statusMsg.textContent = '챔피언 선택 완료! 전장으로 나가세요.'
