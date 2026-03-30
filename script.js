@@ -668,7 +668,7 @@ document.addEventListener('DOMContentLoaded', () => {
     startWebcamBtn.classList.remove('primary')
   })
 
-  // Champion Picker (OP.GG 기반 모든 라인별 전체 챔피언)
+  // Champion Picker (모든 라인별 전체 챔피언)
   const champions = {
     TOP: [
       '올라프',
