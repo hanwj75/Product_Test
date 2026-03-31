@@ -123,6 +123,111 @@ body {
 .rich-text-section p { margin-bottom: 15px; color: var(--muted); font-size: 1.05rem; }
 .rich-text-section ul { padding-left: 20px; color: var(--muted); }
 .rich-text-section li { margin-bottom: 10px; }
+.quick-links {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.info-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 24px;
+  text-align: left;
+}
+
+.info-card h3 {
+  margin-top: 0;
+  margin-bottom: 10px;
+  color: var(--accent);
+}
+
+.info-card p,
+.info-card li {
+  color: var(--muted);
+}
+
+.info-card ul {
+  padding-left: 18px;
+  margin-bottom: 0;
+}
+
+.faq-list {
+  display: grid;
+  gap: 16px;
+}
+
+.faq-item {
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.faq-item h3 {
+  margin: 0 0 10px;
+  color: var(--text);
+}
+
+.content-page {
+  max-width: 920px;
+  margin: 0 auto;
+  padding-top: 48px;
+}
+
+.content-page .hero {
+  margin-top: 20px;
+}
+
+.content-nav {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin: 0 0 28px;
+}
+
+.content-nav a,
+.footer-links a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  padding: 10px 16px;
+  border-radius: 12px;
+  border: 1px solid var(--btn-ghost-border);
+  background: var(--btn-ghost);
+  color: var(--text);
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.footer-links {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.footer-links button {
+  background: none;
+  color: var(--accent);
+  font-size: 0.9rem;
+  padding: 5px 10px;
+  font-weight: normal;
+}
+
+.policy-list {
+  display: grid;
+  gap: 14px;
+}
+
+.policy-list li {
+  margin-bottom: 0;
+}
 .section-title {
   margin-bottom: 20px;
 }
@@ -210,7 +315,6 @@ body.light-mode #disqus_thread {
 }
 
 .footer { text-align: center; margin-top: 60px; padding: 40px 0; border-top: 1px solid var(--line); color: var(--muted); }
-.footer-links button { background: none; color: var(--accent); font-size: 0.9rem; padding: 5px 10px; font-weight: normal; }
 .disclaimer { font-size: 0.8rem; margin: 20px 0; opacity: 0.7; max-width: 800px; margin-left: auto; margin-right: auto; }
 
 /* Modal */
@@ -235,4 +339,7 @@ body.light-mode #disqus_thread {
   .lane-grid { grid-template-columns: 1fr 1fr; }
   .panel { padding: 20px; }
   #disqus_thread { padding: 12px; }
+  .content-page {
+    padding-top: 24px;
+  }
 }
